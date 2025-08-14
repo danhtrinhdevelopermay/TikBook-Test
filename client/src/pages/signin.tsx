@@ -52,28 +52,40 @@ export default function SignIn() {
       
       console.log("Environment detection:", { isOnRender, isDevelopment });
       
-      // Special handling for production environment  
+      // Always set authentication markers first
+      sessionStorage.setItem('loginSuccess', 'true');
+      sessionStorage.setItem('loginTime', Date.now().toString());
+      sessionStorage.setItem('redirectTo', 'home');
+      
+      // Immediately set user data in cache
+      queryClient.setQueryData(["/api/users/me"], result.user);
+      
+      // Special handling for production environment (Render.com)
       if (isOnRender || !isDevelopment) {
-        console.log("🔥 Production/Render environment: implementing comprehensive redirect strategy");
+        console.log("🔥 Production/Render environment: implementing enhanced redirect strategy");
         
-        // Step 1: Mark successful login and force auth state update
-        sessionStorage.setItem('loginSuccess', 'true');
-        sessionStorage.setItem('loginTime', Date.now().toString());
-        sessionStorage.setItem('redirectTo', 'home');
+        // Step 1: Force cache invalidation to ensure fresh data
+        await queryClient.invalidateQueries({ queryKey: ["/api/users/me"] });
         
-        // Step 2: Immediately set user data in cache to prevent auth loss
-        queryClient.setQueryData(["/api/users/me"], result.user);
+        // Step 2: Wait for cache update
+        await new Promise(resolve => setTimeout(resolve, 800));
         
-        // Step 3: Wait longer for state persistence  
-        await new Promise(resolve => setTimeout(resolve, 1500));
-        
-        // Step 4: Use location.href for guaranteed navigation
-        window.location.href = "/?authenticated=true&_t=" + Date.now();
+        // Step 3: Multiple redirect attempts for reliability
+        try {
+          // First attempt: Direct navigation to home
+          window.location.href = "/home?authenticated=true&_t=" + Date.now();
+        } catch (e) {
+          console.log("Primary redirect failed, trying fallback");
+          // Fallback: Navigate to root with auth parameter
+          window.location.href = "/?authenticated=true&_t=" + Date.now();
+        }
       } else {
         console.log("Development environment: using client-side navigation");
+        // Invalidate queries to force re-fetch
         await queryClient.invalidateQueries({ queryKey: ["/api/users/me"] });
-        await new Promise(resolve => setTimeout(resolve, 500));
-        setLocation("/");
+        await new Promise(resolve => setTimeout(resolve, 300));
+        // Navigate to home page directly in development
+        setLocation("/home");
       }
       
     } catch (err: any) {

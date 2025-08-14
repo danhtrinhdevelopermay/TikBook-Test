@@ -1,106 +1,61 @@
-# Social Media Platform
+# Kết Nối Đẹp - Social Media App
 
-## Overview
-A dynamic social media platform built with React, Express.js, and PostgreSQL, focusing on personalized content discovery and real-time interactions.
+## Project Overview
+A comprehensive social media platform built with React, Express, and PostgreSQL. Features include user authentication, posts, stories, groups, messaging, and more.
 
-## Stack
-- Frontend: React.js with TypeScript
-- Backend: Express.js
-- Database: PostgreSQL with Drizzle ORM (Single database connection)
-- State Management: React Query
-- Authentication: Custom session-based authentication
-- Routing: React Router
-- Media Storage: Cloudinary integration
-- Video Playback: Advanced custom video player with interactive controls
+## Architecture
+- **Frontend**: React with TypeScript, Vite, TailwindCSS, Wouter for routing
+- **Backend**: Express.js with TypeScript, PostgreSQL with Drizzle ORM
+- **Authentication**: Session-based with express-session
+- **File Storage**: Cloudinary integration
+- **Deployment**: Render.com
 
-## Recent Changes  
-- **Authentication Redirect Fix v4 (August 14, 2025)**: FINAL COMPREHENSIVE SOLUTION for Render production redirect issues
-  - **Multi-Layer Protection**: Combined sessionStorage, URL parameters, and cache data persistence
-  - **Guaranteed Navigation**: Using `window.location.href` instead of `replace()` for production redirects
-  - **Enhanced State Management**: Immediate cache data setting + sessionStorage markers + URL indicators
-  - **Extended Timing**: 1500ms delay to ensure complete state persistence on slower connections
-  - **Fallback Authentication**: Router checks sessionStorage markers as backup authentication indicator
-  - **URL Parameter Tracking**: Added `?authenticated=true` parameter to force authentication check
-  - **Clean URL Management**: Automatic cleanup of authentication parameters after successful routing
-  - **Comprehensive Logging**: Step-by-step logging for complete debugging visibility
+## Recent Changes (August 14, 2025)
+### Router Rebuild for Production Deployment
+**Issue**: After deploying to render.com, users were redirected to landing page instead of home page after successful login.
 
-- **Complete Render Deploy Fix (August 14, 2025)**: Resolved persistent 404 errors after successful login/signup on Render
-  - **Root Cause Discovery**: Issue wasn't just session persistence but client-side navigation race conditions in production
-  - **Production Redirect Strategy**: Implemented environment-specific navigation - `window.location.href` for production (full reload) vs `setLocation` for development (client routing)
-  - **Authentication State Management**: Enhanced query cache invalidation after login/signup with longer sync delays (500ms)
-  - **Environment Detection**: Hostname-based production detection instead of `import.meta.env.PROD` for more reliable environment detection
-  - **Cache-Busting**: Added timestamp query parameters to force fresh requests and avoid caching issues
-  - **Session Configuration**: Fixed `sameSite: 'strict'` instead of `'none'` for same-domain production deployment
-  - **CORS Configuration**: Updated to properly handle same-domain requests on Render with null/same-origin checks
-  - **Build Process**: Created `deploy.sh` script to copy static files from `dist/public` to `server/public` correctly
-  - **Debug Infrastructure**: Added comprehensive logging to auth endpoints, session middleware, and `/api/debug/session` endpoint
-  - **Documentation**: Created comprehensive `RENDER_DEPLOY.md` with step-by-step deployment, debugging, and new redirect strategy
-  - **Solution Logic**: Full page reload on production ensures fresh authentication state fetch, avoiding SPA routing conflicts
+**Root Cause**: 
+- Authentication state synchronization issues between client and server
+- Router logic not handling production environment authentication properly
+- SessionStorage markers being cleared too early
 
-- **Production Deployment Fixes (August 14, 2025)**: Fixed authentication redirect issues for Render deployment
-  - Updated session configuration with proper CORS and cookie settings for production
-  - Added secure session handling with sameSite and secure cookie options
-  - Improved authentication state management with query cache reset after login/signup
-  - Added small delays in navigation to ensure state synchronization 
-  - Enhanced error handling and authentication state detection
-  - Added production-compatible CORS middleware to handle cross-origin requests properly
+**Solution Implemented**:
+1. **Enhanced Router Logic** (`client/src/App.tsx`):
+   - Priority-based routing system that favors authenticated routes
+   - Better handling of authentication markers and URL parameters
+   - Improved fallback logic for uncertain authentication states
 
-## Previous Changes
-- **Database Simplification (August 13, 2025)**: Removed multi-database system and simplified to single PostgreSQL connection
-  - Deleted `database-manager.ts` and `multi-database-config.ts`
-  - Removed `DATABASE_SETUP.md` documentation
-  - Updated `db.ts` to use simple Neon connection
-  - Replaced all `databaseManager.executeMultiDatabaseRead/Write` calls with direct database operations
-  - Simplified health check endpoints
-  - Removed admin database monitoring endpoints
+2. **Improved Authentication Hook** (`client/src/hooks/useAuth.ts`):
+   - Extended timeout for authentication markers (60 seconds)
+   - Better cache handling with forced no-cache headers
+   - Delayed cleanup of session markers until successful authentication
 
-- **Hybrid Storage System (August 14, 2025)**: Implemented external storage solution for message archiving
-  - Added Firebase/JSON storage for message backup and archiving
-  - Created hybrid storage system: PostgreSQL for recent messages, external storage for archived messages
-  - Added storage management admin panel at `/admin/storage`
-  - Implemented automatic message archiving to save database space
-  - Added storage statistics and management API endpoints
+3. **Enhanced SignIn Component** (`client/src/pages/signin.tsx`):
+   - Environment-specific redirect strategies
+   - Multiple redirect attempts for reliability
+   - Direct navigation to `/home` route in production
 
-- **YouTube Integration (August 14, 2025)**: Added complete YouTube Data API v3 integration
-  - Created `/videos` page with YouTube search functionality
-  - Integrated YouTube Data API v3 for video search and details
-  - **Custom Video Player**: Built completely custom video controls replacing YouTube's default interface
-  - **Search on Demand**: Only search when user clicks search button to save API quota
-  - **Hidden Branding**: Removed YouTube logo and title overlays for cleaner interface
-  - **Redesigned Layout**: Moved channel info below video title with custom avatar design
-  - Implemented video statistics display (views, likes, channel info)
-  - Added navigation link in left sidebar for easy access
-  - Included error handling and authentication for API requests
-
-## Project Architecture
-### Database Layer
-- Single PostgreSQL database using Neon serverless
-- Drizzle ORM for type-safe database operations
-- Simple connection pool for session management
-- Health check endpoint at `/api/health`
-
-### Backend Structure
-- `server/db.ts`: Database connection and pool setup
-- `server/storage.ts`: Database operations and business logic
-- `server/routes.ts`: API endpoints and middleware
-- `server/auth.ts`: Authentication middleware
-- `server/cloudinary.ts`: Media upload handling
-
-### Frontend Structure
-- React components with TypeScript
-- TanStack Query for state management
-- Wouter for routing
-- Shadcn/ui components
-- Tailwind CSS for styling
+4. **Smart AuthenticatedRoutes Component**:
+   - Force redirect logic from root to home after login
+   - URL parameter detection for authentication state
+   - Automatic URL cleanup after successful authentication
 
 ## User Preferences
-- Language: Vietnamese (when user communicates in Vietnamese)
-- Prefer simple, clean architecture without over-engineering
-- Focus on single database approach for reliability
+- Language: Vietnamese
+- Focus on production stability and reliability
+- Prioritize fixing deployment-related issues
 
-## Development Guidelines
-- Follow the fullstack_js blueprint for consistent patterns
-- Use proper TypeScript types from shared schema
-- Implement proper error handling
-- Maintain clean separation between frontend and backend
-- Use Drizzle ORM for all database operations
+## Technical Decisions
+- Use session-based authentication over JWT for simplicity
+- Implement client-side routing with wouter
+- Use React Query for state management and API calls
+- Prioritize production environment compatibility
+
+## Database Schema
+Located in `shared/schema.ts` with Drizzle ORM models and relations.
+
+## Deployment Configuration
+- Platform: Render.com
+- Environment variables: DATABASE_URL and other secrets
+- Build command: `npm run build`
+- Start command: `npm start`

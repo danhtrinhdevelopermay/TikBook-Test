@@ -20,25 +20,21 @@ export function useAuth() {
       const signupSuccess = sessionStorage.getItem('signupSuccess');
       const loginTime = sessionStorage.getItem('loginTime');
       const signupTime = sessionStorage.getItem('signupTime');
-      const redirectTo = sessionStorage.getItem('redirectTo');
       
       // Check URL parameters for authentication indicators
       const urlParams = new URLSearchParams(window.location.search);
       const authenticatedParam = urlParams.get('authenticated');
       
+      let shouldCleanupMarkers = false;
+      
       if (loginSuccess || signupSuccess || authenticatedParam) {
         const timestamp = loginTime || signupTime || Date.now().toString();
         const timeDiff = Date.now() - parseInt(timestamp);
-        if (timeDiff < 30000) { // Extended to 30 seconds
+        if (timeDiff < 60000) { // Extended to 60 seconds for production stability
           console.log("🎯 Recent login/signup detected, forcing fresh auth check");
-          console.log("📍 Redirect target:", redirectTo || 'home');
+          console.log("📍 Authentication markers found");
+          shouldCleanupMarkers = true;
         }
-        // Clean up markers after successful check
-        sessionStorage.removeItem('loginSuccess');
-        sessionStorage.removeItem('signupSuccess');
-        sessionStorage.removeItem('loginTime');
-        sessionStorage.removeItem('signupTime');
-        sessionStorage.removeItem('redirectTo');
         
         // Clean URL if it has auth parameters
         if (authenticatedParam && window.history.replaceState) {
@@ -49,11 +45,23 @@ export function useAuth() {
       
       const response = await fetch("/api/users/me", {
         credentials: 'include',
-        cache: 'no-store' // Force fresh request
+        cache: 'no-store', // Force fresh request
+        headers: {
+          'Cache-Control': 'no-cache',
+          'Pragma': 'no-cache'
+        }
       });
       
       if (response.status === 401) {
         console.log("❌ User not authenticated (401)");
+        // Only cleanup markers if authentication definitively failed
+        if (shouldCleanupMarkers) {
+          sessionStorage.removeItem('loginSuccess');
+          sessionStorage.removeItem('signupSuccess');
+          sessionStorage.removeItem('loginTime');
+          sessionStorage.removeItem('signupTime');
+          sessionStorage.removeItem('redirectTo');
+        }
         return null; // Not authenticated, return null instead of throwing
       }
       
@@ -62,16 +70,26 @@ export function useAuth() {
         throw new Error("Failed to fetch user");
       }
       
-      const user = await response.json();
-      console.log("✅ User authenticated:", user?.username);
-      return user;
+      const userData = await response.json();
+      console.log("✅ User authenticated:", userData?.username);
+      
+      // Only cleanup markers after successful authentication
+      if (shouldCleanupMarkers) {
+        sessionStorage.removeItem('loginSuccess');
+        sessionStorage.removeItem('signupSuccess');
+        sessionStorage.removeItem('loginTime');
+        sessionStorage.removeItem('signupTime');
+        sessionStorage.removeItem('redirectTo');
+      }
+      
+      return userData;
     },
-    retry: 2,
-    retryDelay: 2000,
+    retry: 3,
+    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 5000),
     refetchOnMount: true,
     refetchOnWindowFocus: true, // Enable refetch on focus for production
-    staleTime: 1 * 60 * 1000, // Reduce to 1 minute for more frequent checks
-    gcTime: 5 * 60 * 1000, // Reduce to 5 minutes
+    staleTime: 0, // Always fresh for authentication
+    gcTime: 1 * 60 * 1000, // Cache for 1 minute
   });
 
   // Sign up mutation
@@ -150,8 +168,8 @@ export function useAuth() {
   return {
     user,
     isLoading,
-    isAuthenticated: !!user && !isError,
-    isError: isError && error?.message !== "Failed to fetch user",
+    isAuthenticated: !!user,
+    isError: isError && !user,
     signUp,
     signIn,
     signOut,

@@ -35,9 +35,37 @@ function AuthenticatedRoutes() {
   console.log("📍 AuthenticatedRoutes component is rendering");
   console.log("📍 Current pathname:", window.location.pathname);
   
+  // Check if we should force redirect to home after login
+  const shouldRedirectToHome = () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const authenticatedParam = urlParams.get('authenticated');
+    const currentPath = window.location.pathname;
+    
+    // Force redirect to home if:
+    // 1. We have authenticated parameter in URL and we're on root
+    // 2. We're on root path and just logged in
+    if ((authenticatedParam && currentPath === '/') || 
+        (currentPath === '/' && sessionStorage.getItem('loginSuccess'))) {
+      console.log("🎯 Forcing redirect to home page");
+      // Clean URL and redirect to home
+      if (window.history.replaceState) {
+        window.history.replaceState({}, '', '/home');
+      }
+      return true;
+    }
+    return false;
+  };
+  
   return (
     <Switch>
-      <Route path="/" component={Home} />
+      <Route path="/">{() => {
+        if (shouldRedirectToHome()) {
+          console.log("🏠 Redirecting from root to home");
+          return <Home />;
+        }
+        console.log("🏠 Rendering home on root path");
+        return <Home />;
+      }}</Route>
       <Route path="/home">{() => {
         console.log("🏠 /home route matched!");
         return <Home />;
@@ -85,7 +113,21 @@ function UnauthenticatedRoutes() {
 function Router() {
   const { isAuthenticated, isLoading, isError, user } = useAuth();
   
-  console.log("🔄 Router state:", { isAuthenticated, isLoading, isError, userExists: !!user });
+  // Check for authentication markers and URL parameters
+  const loginSuccess = typeof window !== 'undefined' && sessionStorage.getItem('loginSuccess');
+  const urlParams = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
+  const authenticatedParam = urlParams?.get('authenticated');
+  const currentPath = typeof window !== 'undefined' ? window.location.pathname : '/';
+  
+  console.log("🔄 Router state:", { 
+    isAuthenticated, 
+    isLoading, 
+    isError, 
+    userExists: !!user, 
+    loginSuccess: !!loginSuccess, 
+    authenticatedParam: !!authenticatedParam,
+    currentPath 
+  });
 
   // Show loading screen during authentication check
   if (isLoading) {
@@ -102,25 +144,52 @@ function Router() {
     );
   }
 
-  // Check for production authentication markers
-  const loginSuccess = typeof window !== 'undefined' && sessionStorage.getItem('loginSuccess');
-  const redirectTo = typeof window !== 'undefined' && sessionStorage.getItem('redirectTo');
-  
-  // If there's an authentication error BUT we have recent login markers, still try authenticated routes
-  if (isError && !loginSuccess) {
-    console.log("Authentication error detected (no recent login), showing unauthenticated routes");
+  // Priority routing logic for production environment
+  // 1. If user is authenticated (confirmed by API), always show authenticated routes
+  if (isAuthenticated && user) {
+    console.log("✅ User is authenticated (API confirmed), showing authenticated routes");
+    return <AuthenticatedRoutes />;
+  }
+
+  // 2. If we have recent login markers or URL auth parameter, prioritize authenticated routes
+  if (loginSuccess || authenticatedParam) {
+    console.log("🎯 Recent login detected or auth parameter found, showing authenticated routes");
+    return <AuthenticatedRoutes />;
+  }
+
+  // 3. Special handling for root path "/" - prefer authenticated routes unless explicitly unauthenticated
+  if (currentPath === '/' && !isError) {
+    console.log("📍 On root path with no explicit auth error, showing authenticated routes");
+    return <AuthenticatedRoutes />;
+  }
+
+  // 4. If user is on authenticated paths (not signin/signup), prefer authenticated routes
+  if (currentPath !== '/signin' && currentPath !== '/signup' && !isError) {
+    console.log("🎯 On authenticated path, showing authenticated routes");
+    return <AuthenticatedRoutes />;
+  }
+
+  // 5. If there's a clear authentication error and we're on auth-related paths, show unauthenticated routes
+  if (isError && (currentPath === '/signin' || currentPath === '/signup')) {
+    console.log("❌ Authentication error on auth pages, showing unauthenticated routes");
     return <UnauthenticatedRoutes />;
   }
 
-  // Enhanced authentication routing
-  if (isAuthenticated || loginSuccess) {
-    console.log("User is authenticated (or recent login detected), showing authenticated routes");
-    console.log("🎯 Target page:", redirectTo || 'home');
-    return <AuthenticatedRoutes />;
-  } else {
-    console.log("User is not authenticated, showing unauthenticated routes");
+  // 6. If we're on root path with auth error, show unauthenticated routes
+  if (isError && currentPath === '/') {
+    console.log("❌ Authentication error on root path, showing unauthenticated routes");
     return <UnauthenticatedRoutes />;
   }
+
+  // 7. Default fallback - if no clear indication, try authenticated routes first
+  if (!isError) {
+    console.log("🤔 Uncertain state but no error, defaulting to authenticated routes");
+    return <AuthenticatedRoutes />;
+  }
+
+  // 8. Final fallback - show unauthenticated routes
+  console.log("🔄 Final fallback - showing unauthenticated routes");
+  return <UnauthenticatedRoutes />;
 }
 
 function App() {
