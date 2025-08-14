@@ -104,6 +104,70 @@ body.force-desktop-layout .lg\\:hidden {
   display: none !important;
 }
 
+/* Force minimum width and prevent mobile scaling */
+@media screen and (min-width: 1024px) {
+  html {
+    min-width: 1024px !important;
+    width: 100% !important;
+  }
+  
+  body {
+    min-width: 1024px !important;
+    width: 100% !important;
+    transform: none !important;
+    zoom: 1 !important;
+  }
+  
+  /* Prevent mobile layout from showing */
+  .lg\\:hidden {
+    display: none !important;
+    visibility: hidden !important;
+  }
+  
+  /* Force desktop elements to show */
+  .lg\\:block,
+  .lg\\:flex {
+    display: block !important;
+    visibility: visible !important;
+  }
+  
+  .lg\\:flex {
+    display: flex !important;
+  }
+}
+
+/* Aggressive desktop layout enforcement */
+@media screen and (min-width: 1024px) {
+  /* Hide ALL mobile-only elements */
+  [class*="lg:hidden"],
+  .lg\\:hidden {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    position: absolute !important;
+    left: -9999px !important;
+  }
+  
+  /* Force show desktop elements */
+  [class*="hidden"][class*="lg:block"],
+  .hidden.lg\\:block {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    position: static !important;
+    left: auto !important;
+  }
+  
+  [class*="hidden"][class*="lg:flex"],
+  .hidden.lg\\:flex {
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    position: static !important;
+    left: auto !important;
+  }
+}
+
 /* Hide scrollbars */
 .scrollbar-hide {
   -ms-overflow-style: none;

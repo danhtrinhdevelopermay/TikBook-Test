@@ -14,18 +14,35 @@ export function useScreenSize() {
     const handleResize = () => {
       const width = window.innerWidth;
       const height = window.innerHeight;
+      
+      // Force desktop for screens wider than 1024px
+      const isDesktop = width >= 1024;
+      const isMobile = width < 1024;
+      
       setScreenSize({
         width,
         height,
-        isDesktop: width >= 1024,
-        isMobile: width < 1024,
+        isDesktop,
+        isMobile,
       });
       
       // Force desktop layout classes on large screens
-      if (width >= 1024) {
+      if (isDesktop) {
         document.body.classList.add('force-desktop-layout');
+        document.documentElement.style.setProperty('--is-desktop', '1');
+        // Prevent mobile viewport scaling
+        const viewport = document.querySelector('meta[name=viewport]');
+        if (viewport) {
+          viewport.setAttribute('content', 'width=1024, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no');
+        }
       } else {
         document.body.classList.remove('force-desktop-layout');
+        document.documentElement.style.setProperty('--is-desktop', '0');
+        // Allow mobile viewport scaling
+        const viewport = document.querySelector('meta[name=viewport]');
+        if (viewport) {
+          viewport.setAttribute('content', 'width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes');
+        }
       }
     };
 
@@ -34,9 +51,13 @@ export function useScreenSize() {
     
     // Add event listener
     window.addEventListener('resize', handleResize);
+    window.addEventListener('orientationchange', handleResize);
     
     // Clean up
-    return () => window.removeEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      window.removeEventListener('orientationchange', handleResize);
+    };
   }, []);
 
   return screenSize;
