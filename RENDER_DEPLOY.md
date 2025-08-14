@@ -115,12 +115,46 @@ Render tự động cung cấp HTTPS. Đảm bảo:
 3. Verify DATABASE_URL kết nối được
 4. Kiểm tra sessions table trong database có data không
 
+## Fix Mới Nhất: Production Redirect Strategy
+
+### Vấn Đề Phát Hiện
+Ngay cả với session/CORS fixes, vấn đề 404 vẫn tồn tại vì client-side navigation không đồng bộ đúng authentication state sau login.
+
+### Giải Pháp Mới (ĐÃ ÁP DỤNG)
+**Client-side redirect strategy:**
+- **Development**: Sử dụng client-side routing (`setLocation`)
+- **Production**: Sử dụng `window.location.href` để force full page reload
+
+**Lý do:**
+- Full page reload đảm bảo authentication state được fetch fresh từ server
+- Tránh race conditions giữa login mutation và router state
+- Đảm bảo session cookies được gửi đúng với request mới
+
+### Code Changes Applied
+```javascript
+// In signin.tsx and signup.tsx
+if (import.meta.env.PROD) {
+  window.location.href = "/home"; // hoặc "/setup-profile"
+} else {
+  setLocation("/home");
+}
+```
+
+### Debug Endpoint Added
+`GET /api/debug/session` - endpoint để kiểm tra session state trên production
+
 ## Kết Luận
 
-Các fix đã implement:
+Các fix đã implement (CẬP NHẬT):
 - ✅ Session configuration với `sameSite: 'strict'` 
 - ✅ CORS setup cho same-domain requests
 - ✅ Debug logging cho production troubleshooting
 - ✅ Build script copy static files đúng chỗ
+- ✅ **Production redirect strategy với window.location.href**
+- ✅ **Enhanced auth state invalidation sau login/signup**
 
-Sau khi deploy với các fix này, issue 404 sau login sẽ được giải quyết.
+**Test trên production:**
+1. Deploy với build command: `./deploy.sh`
+2. Login/signup → sẽ thấy full page reload thay vì client navigation
+3. Authentication state được sync đúng
+4. Không còn 404 sau redirect

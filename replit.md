@@ -14,14 +14,16 @@ A dynamic social media platform built with React, Express.js, and PostgreSQL, fo
 - Video Playback: Advanced custom video player with interactive controls
 
 ## Recent Changes
-- **Complete Render Deploy Fix (August 14, 2025)**: Resolved 404 errors after successful login/signup on Render
-  - **Root Cause Analysis**: Authentication worked but session/cookies weren't persisting correctly on production
+- **Complete Render Deploy Fix (August 14, 2025)**: Resolved persistent 404 errors after successful login/signup on Render
+  - **Root Cause Discovery**: Issue wasn't just session persistence but client-side navigation race conditions in production
+  - **Production Redirect Strategy**: Implemented environment-specific navigation - `window.location.href` for production (full reload) vs `setLocation` for development (client routing)
+  - **Authentication State Management**: Enhanced query cache invalidation after login/signup with longer sync delays (500ms)
   - **Session Configuration**: Fixed `sameSite: 'strict'` instead of `'none'` for same-domain production deployment
   - **CORS Configuration**: Updated to properly handle same-domain requests on Render with null/same-origin checks
   - **Build Process**: Created `deploy.sh` script to copy static files from `dist/public` to `server/public` correctly
-  - **Debug Infrastructure**: Added comprehensive logging to auth endpoints and session middleware for production troubleshooting
-  - **Documentation**: Created detailed `RENDER_DEPLOY.md` with step-by-step deployment and debugging guide
-  - **Verification**: Development authentication working perfectly with proper session management and cookie handling
+  - **Debug Infrastructure**: Added comprehensive logging to auth endpoints, session middleware, and `/api/debug/session` endpoint
+  - **Documentation**: Created comprehensive `RENDER_DEPLOY.md` with step-by-step deployment, debugging, and new redirect strategy
+  - **Solution Logic**: Full page reload on production ensures fresh authentication state fetch, avoiding SPA routing conflicts
 
 - **Production Deployment Fixes (August 14, 2025)**: Fixed authentication redirect issues for Render deployment
   - Updated session configuration with proper CORS and cookie settings for production

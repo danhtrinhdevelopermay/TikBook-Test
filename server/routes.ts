@@ -169,16 +169,47 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Debug endpoint for production troubleshooting
+  app.get("/api/debug/session", (req, res) => {
+    console.log("=== DEBUG SESSION ENDPOINT ===");
+    console.log("NODE_ENV:", process.env.NODE_ENV);
+    console.log("Request headers:", JSON.stringify(req.headers, null, 2));
+    console.log("Session:", req.session);
+    console.log("Session ID:", req.session?.id);
+    console.log("Session userId:", req.session?.userId);
+    console.log("Cookie header:", req.headers.cookie);
+    
+    res.json({
+      env: process.env.NODE_ENV,
+      hasSession: !!req.session,
+      sessionId: req.session?.id,
+      hasUserId: !!req.session?.userId,
+      userId: req.session?.userId,
+      hasCookie: !!req.headers.cookie,
+      cookieHeader: req.headers.cookie,
+      userAgent: req.headers['user-agent'],
+      origin: req.headers.origin,
+      host: req.headers.host,
+      protocol: req.protocol,
+      secure: req.secure
+    });
+  });
+
   // Get current user
   app.get("/api/users/me", async (req, res) => {
     console.log("=== GET /api/users/me DEBUG ===");
-    console.log("Request headers:", req.headers);
+    console.log("NODE_ENV:", process.env.NODE_ENV);
+    console.log("Request headers:", JSON.stringify({
+      cookie: req.headers.cookie,
+      origin: req.headers.origin,
+      host: req.headers.host,
+      'user-agent': req.headers['user-agent']
+    }, null, 2));
     console.log("Session:", req.session);
-    console.log("Session ID:", req.session.id);
-    console.log("Session userId:", req.session.userId);
-    console.log("Cookie:", req.headers.cookie);
+    console.log("Session ID:", req.session?.id);
+    console.log("Session userId:", req.session?.userId);
     
-    if (!req.session.userId) {
+    if (!req.session?.userId) {
       console.log("❌ No session userId found, sending 401");
       return res.status(401).json({ message: "Authentication required" });
     }

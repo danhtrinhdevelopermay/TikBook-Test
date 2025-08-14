@@ -5,6 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { signInSchema, type SignInUser } from "@shared/schema";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
+import { useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
@@ -16,6 +17,7 @@ export default function SignIn() {
   const [, setLocation] = useLocation();
   const { signIn } = useAuth();
   const { toast } = useToast();
+  const queryClient = useQueryClient();
   const [error, setError] = useState<string>("");
 
   const form = useForm<SignInUser>({
@@ -39,11 +41,20 @@ export default function SignIn() {
         description: "Bạn đã đăng nhập thành công.",
       });
       
-      // Wait for mutation to complete and cache to update
-      await new Promise(resolve => setTimeout(resolve, 200));
+      // Force refresh auth state by invalidating cache
+      await queryClient.invalidateQueries({ queryKey: ["/api/users/me"] });
       
-      // Use React Router navigation instead of window.location
-      setLocation("/home");
+      // Wait longer for state to sync properly
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
+      // For production, use window.location to ensure fresh page load
+      if (import.meta.env.PROD) {
+        console.log("Production mode: using window.location for redirect");
+        window.location.href = "/home";
+      } else {
+        console.log("Development mode: using setLocation for redirect");
+        setLocation("/home");
+      }
       
     } catch (err: any) {
       console.error("SignIn error:", err);
