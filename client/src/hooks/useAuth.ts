@@ -13,26 +13,52 @@ export function useAuth() {
   const { data: user, isLoading, error, isError } = useQuery({
     queryKey: ["/api/users/me"],
     queryFn: async (): Promise<User | null> => {
+      console.log("🔄 Fetching user authentication status...");
+      
+      // Check for recent login/signup success markers
+      const loginSuccess = sessionStorage.getItem('loginSuccess');
+      const signupSuccess = sessionStorage.getItem('signupSuccess');
+      const loginTime = sessionStorage.getItem('loginTime');
+      const signupTime = sessionStorage.getItem('signupTime');
+      
+      if (loginSuccess || signupSuccess) {
+        const timestamp = loginTime || signupTime;
+        const timeDiff = Date.now() - parseInt(timestamp || '0');
+        if (timeDiff < 10000) { // Within 10 seconds
+          console.log("🎯 Recent login/signup detected, forcing fresh auth check");
+        }
+        // Clean up markers
+        sessionStorage.removeItem('loginSuccess');
+        sessionStorage.removeItem('signupSuccess');
+        sessionStorage.removeItem('loginTime');
+        sessionStorage.removeItem('signupTime');
+      }
+      
       const response = await fetch("/api/users/me", {
-        credentials: 'include'
+        credentials: 'include',
+        cache: 'no-store' // Force fresh request
       });
       
       if (response.status === 401) {
+        console.log("❌ User not authenticated (401)");
         return null; // Not authenticated, return null instead of throwing
       }
       
       if (!response.ok) {
+        console.log("❌ Failed to fetch user:", response.status, response.statusText);
         throw new Error("Failed to fetch user");
       }
       
-      return response.json();
+      const user = await response.json();
+      console.log("✅ User authenticated:", user?.username);
+      return user;
     },
-    retry: 1,
-    retryDelay: 1000,
+    retry: 2,
+    retryDelay: 2000,
     refetchOnMount: true,
-    refetchOnWindowFocus: false,
-    staleTime: 5 * 60 * 1000, // 5 minutes
-    gcTime: 10 * 60 * 1000, // 10 minutes
+    refetchOnWindowFocus: true, // Enable refetch on focus for production
+    staleTime: 1 * 60 * 1000, // Reduce to 1 minute for more frequent checks
+    gcTime: 5 * 60 * 1000, // Reduce to 5 minutes
   });
 
   // Sign up mutation

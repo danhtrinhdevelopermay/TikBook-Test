@@ -83,7 +83,9 @@ function UnauthenticatedRoutes() {
 }
 
 function Router() {
-  const { isAuthenticated, isLoading, isError } = useAuth();
+  const { isAuthenticated, isLoading, isError, user } = useAuth();
+  
+  console.log("🔄 Router state:", { isAuthenticated, isLoading, isError, userExists: !!user });
 
   // Show loading screen during authentication check
   if (isLoading) {

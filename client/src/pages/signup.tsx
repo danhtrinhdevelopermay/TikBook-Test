@@ -74,15 +74,21 @@ export default function SignUp() {
       
       if (isOnRender || !isDevelopment) {
         console.log("Production/Render environment: using full page reload to setup-profile");
-        // For production (especially Render), use full page reload with delay
-        await new Promise(resolve => setTimeout(resolve, 500));
+        // For production, mark successful signup in sessionStorage
+        sessionStorage.setItem('signupSuccess', 'true');
+        sessionStorage.setItem('signupTime', Date.now().toString());
+        
+        // Invalidate queries and wait for persistence
+        await queryClient.invalidateQueries({ queryKey: ["/api/users/me"] });
+        await new Promise(resolve => setTimeout(resolve, 1000)); // Increased delay
+        
         // Use replace to avoid browser history issues and add timestamp to force refresh
         window.location.replace("/setup-profile?_t=" + Date.now());
       } else {
         console.log("Development environment: using client-side navigation to setup-profile");
         // Invalidate and refetch for development
         await queryClient.invalidateQueries({ queryKey: ["/api/users/me"] });
-        await new Promise(resolve => setTimeout(resolve, 100));
+        await new Promise(resolve => setTimeout(resolve, 500));
         setLocation("/setup-profile");
       }
       
