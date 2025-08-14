@@ -67,12 +67,16 @@ export default function SignUp() {
       // Wait longer for state to sync properly
       await new Promise(resolve => setTimeout(resolve, 500));
       
-      // For production, use window.location to ensure fresh page load
-      if (import.meta.env.PROD) {
-        console.log("Production mode: using window.location for redirect to setup-profile");
-        window.location.href = "/setup-profile";
+      // For production environment (detected by hostname), use window.location to ensure fresh page load
+      const isProduction = window.location.hostname !== 'localhost' && 
+                          !window.location.hostname.includes('replit.dev');
+      
+      if (isProduction) {
+        console.log("Production environment detected: using window.location for redirect to setup-profile");
+        // Add timestamp to force fresh request and avoid caching issues
+        window.location.href = "/setup-profile?t=" + Date.now();
       } else {
-        console.log("Development mode: using setLocation for redirect to setup-profile");
+        console.log("Development environment: using setLocation for redirect to setup-profile");
         setLocation("/setup-profile");
       }
       

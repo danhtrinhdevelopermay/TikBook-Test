@@ -140,8 +140,11 @@ if (import.meta.env.PROD) {
 }
 ```
 
-### Debug Endpoint Added
-`GET /api/debug/session` - endpoint để kiểm tra session state trên production
+### Debug Endpoints Added
+- `GET /api/debug/session` - kiểm tra session state trên production
+- `GET /api/debug/auth-flow` - trace authentication redirect flow
+- Hostname-based environment detection thay vì `import.meta.env.PROD`
+- Timestamp query parameter để force fresh requests
 
 ## Kết Luận
 

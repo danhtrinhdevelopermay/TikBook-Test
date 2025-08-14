@@ -18,6 +18,8 @@ A dynamic social media platform built with React, Express.js, and PostgreSQL, fo
   - **Root Cause Discovery**: Issue wasn't just session persistence but client-side navigation race conditions in production
   - **Production Redirect Strategy**: Implemented environment-specific navigation - `window.location.href` for production (full reload) vs `setLocation` for development (client routing)
   - **Authentication State Management**: Enhanced query cache invalidation after login/signup with longer sync delays (500ms)
+  - **Environment Detection**: Hostname-based production detection instead of `import.meta.env.PROD` for more reliable environment detection
+  - **Cache-Busting**: Added timestamp query parameters to force fresh requests and avoid caching issues
   - **Session Configuration**: Fixed `sameSite: 'strict'` instead of `'none'` for same-domain production deployment
   - **CORS Configuration**: Updated to properly handle same-domain requests on Render with null/same-origin checks
   - **Build Process**: Created `deploy.sh` script to copy static files from `dist/public` to `server/public` correctly

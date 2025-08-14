@@ -195,6 +195,38 @@ export async function registerRoutes(app: Express): Promise<Server> {
     });
   });
 
+  // Debug endpoint for authentication redirect flow testing
+  app.get("/api/debug/auth-flow", (req, res) => {
+    const isAuthenticated = !!req.session?.userId;
+    const user = req.session?.user;
+    
+    console.log("=== AUTH FLOW DEBUG ===");
+    console.log("Authenticated:", isAuthenticated);
+    console.log("User ID:", req.session?.userId);
+    console.log("Full session:", req.session);
+    
+    res.json({
+      status: isAuthenticated ? "authenticated" : "not_authenticated",
+      userId: req.session?.userId,
+      user: user ? {
+        id: user.id,
+        username: user.username,
+        email: user.email,
+        firstName: user.firstName
+      } : null,
+      sessionId: req.sessionID,
+      timestamp: new Date().toISOString(),
+      environment: process.env.NODE_ENV,
+      hostname: req.headers.host,
+      query: req.query,
+      recommendations: {
+        shouldRedirect: isAuthenticated,
+        targetUrl: isAuthenticated ? "/home" : "/signin",
+        reason: isAuthenticated ? "User is authenticated, should access home" : "User not authenticated, should login"
+      }
+    });
+  });
+
   // Get current user
   app.get("/api/users/me", async (req, res) => {
     console.log("=== GET /api/users/me DEBUG ===");
