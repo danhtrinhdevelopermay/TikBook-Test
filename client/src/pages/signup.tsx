@@ -61,23 +61,27 @@ export default function SignUp() {
         description: "Tài khoản đã được tạo và bạn đã đăng nhập.",
       });
       
-      // Force refresh auth state by invalidating cache
-      await queryClient.invalidateQueries({ queryKey: ["/api/users/me"] });
+      // Immediately set user data in cache to ensure authentication state is updated
+      queryClient.setQueryData(["/api/users/me"], result.user);
       
-      // Wait longer for state to sync properly
-      await new Promise(resolve => setTimeout(resolve, 500));
+      // Force refetch to ensure data consistency
+      await queryClient.refetchQueries({ queryKey: ["/api/users/me"] });
       
-      // For production environment (detected by hostname), use window.location to ensure fresh page load
-      const isProduction = window.location.hostname !== 'localhost' && 
-                          !window.location.hostname.includes('replit.dev');
+      // Wait for state to properly update
+      await new Promise(resolve => setTimeout(resolve, 100));
       
-      if (isProduction) {
-        console.log("Production environment detected: using window.location for redirect to setup-profile");
-        // Add timestamp to force fresh request and avoid caching issues
-        window.location.href = "/setup-profile?t=" + Date.now();
-      } else {
-        console.log("Development environment: using setLocation for redirect to setup-profile");
+      // Always use client-side navigation for development environment
+      const isDevelopment = window.location.hostname === 'localhost' || 
+                           window.location.hostname.includes('replit.dev') ||
+                           window.location.hostname.includes('5000');
+      
+      if (isDevelopment) {
+        console.log("Development environment: using client-side navigation to setup-profile");
         setLocation("/setup-profile");
+      } else {
+        console.log("Production environment: using full page reload for redirect to setup-profile");
+        // Use full page reload to ensure fresh authentication state in production
+        window.location.href = "/setup-profile";
       }
       
     } catch (err: any) {

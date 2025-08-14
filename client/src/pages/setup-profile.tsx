@@ -77,13 +77,31 @@ export default function SetupProfile() {
 
       return response.json();
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/users/me"] });
+    onSuccess: async (data) => {
+      // Update user data in cache with the updated profile
+      if (data.user) {
+        queryClient.setQueryData(["/api/users/me"], data.user);
+      }
+      await queryClient.refetchQueries({ queryKey: ["/api/users/me"] });
+      
       toast({
         title: "Thành công!",
         description: "Thông tin cá nhân đã được cập nhật.",
       });
-      setLocation("/");
+      
+      // Wait a bit for state to update, then navigate to home
+      await new Promise(resolve => setTimeout(resolve, 100));
+      
+      // Navigate to home page after profile setup
+      const isDevelopment = window.location.hostname === 'localhost' || 
+                           window.location.hostname.includes('replit.dev') ||
+                           window.location.hostname.includes('5000');
+      
+      if (isDevelopment) {
+        setLocation("/home");
+      } else {
+        window.location.href = "/home";
+      }
     },
     onError: (error: any) => {
       toast({
@@ -95,7 +113,16 @@ export default function SetupProfile() {
   });
 
   const handleSkip = () => {
-    setLocation("/");
+    // Navigate to home page when skipping profile setup
+    const isDevelopment = window.location.hostname === 'localhost' || 
+                         window.location.hostname.includes('replit.dev') ||
+                         window.location.hostname.includes('5000');
+    
+    if (isDevelopment) {
+      setLocation("/home");
+    } else {
+      window.location.href = "/home";
+    }
   };
 
   const onSubmit = (data: ProfileSetupData) => {

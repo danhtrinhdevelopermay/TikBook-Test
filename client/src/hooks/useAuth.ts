@@ -57,8 +57,8 @@ export function useAuth() {
     onSuccess: async (data) => {
       // Set user data immediately in cache
       queryClient.setQueryData(["/api/users/me"], data.user);
-      // Force refetch to ensure fresh data
-      await queryClient.refetchQueries({ queryKey: ["/api/users/me"] });
+      // Invalidate and refetch to ensure fresh data
+      await queryClient.invalidateQueries({ queryKey: ["/api/users/me"] });
     },
   });
 
@@ -84,8 +84,8 @@ export function useAuth() {
     onSuccess: async (data) => {
       // Set user data immediately in cache
       queryClient.setQueryData(["/api/users/me"], data.user);
-      // Force refetch to ensure fresh data
-      await queryClient.refetchQueries({ queryKey: ["/api/users/me"] });
+      // Invalidate and refetch to ensure fresh data
+      await queryClient.invalidateQueries({ queryKey: ["/api/users/me"] });
     },
   });
 
