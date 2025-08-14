@@ -111,7 +111,11 @@ function UnauthenticatedRoutes() {
       <Route path="/signup" component={SignUp} />
       <Route path="/test-login" component={TestLogin} />
       <Route path="/debug-session" component={DebugSession} />
-      <Route component={NotFound} />
+      <Route>{() => {
+        // Redirect any unknown authenticated route to signin
+        window.location.href = '/signin';
+        return null;
+      }}</Route>
     </Switch>
   );
 }
@@ -163,16 +167,17 @@ function Router() {
     return <AuthenticatedRoutes />;
   }
 
-  // 3. Special handling for root path "/" - prefer authenticated routes unless explicitly unauthenticated
-  if (currentPath === '/' && !isError) {
-    console.log("📍 On root path with no explicit auth error, showing authenticated routes");
-    return <AuthenticatedRoutes />;
+  // 3. If user is not authenticated and has no login markers, show unauthenticated routes
+  if (!isAuthenticated && !user && !loginSuccess && !authenticatedParam) {
+    console.log("❌ User not authenticated, showing unauthenticated routes");
+    return <UnauthenticatedRoutes />;
   }
 
-  // 4. If user is on authenticated paths (not signin/signup), prefer authenticated routes
-  if (currentPath !== '/signin' && currentPath !== '/signup' && !isError) {
-    console.log("🎯 On authenticated path, showing authenticated routes");
-    return <AuthenticatedRoutes />;
+  // 4. If user is on authenticated paths but not actually authenticated, redirect to signin
+  if (currentPath !== '/signin' && currentPath !== '/signup' && currentPath !== '/test-login' && 
+      currentPath !== '/debug-session' && !isAuthenticated && !loginSuccess && !authenticatedParam) {
+    console.log("🔄 Not authenticated but on authenticated path, showing unauthenticated routes");
+    return <UnauthenticatedRoutes />;
   }
 
   // 5. If there's a clear authentication error and we're on auth-related paths, show unauthenticated routes
