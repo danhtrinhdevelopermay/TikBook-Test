@@ -1,5 +1,5 @@
 import { Bell, MessageCircle, Search, Home, Users, Tv, Store, Gamepad2, ChevronDown, LogOut, Settings, User } from "lucide-react";
-import { Link } from "wouter";
+import { Link, useLocation } from "wouter";
 import { useAuth } from "@/hooks/useAuth";
 import { useOnlineStatus } from "@/hooks/useOnlineStatus";
 import { useToast } from "@/hooks/use-toast";
@@ -18,6 +18,7 @@ import {
 export default function Header() {
   const { user, signOut } = useAuth();
   const { toast } = useToast();
+  const [location] = useLocation();
   
   // Maintain online status
   useOnlineStatus();
@@ -65,96 +66,95 @@ export default function Header() {
             </Link>
           </div>
 
-          {/* Center Navigation */}
-          <nav className="hidden lg:flex space-x-1">
+          {/* Center Navigation - Compact Facebook style */}
+          <nav className="hidden lg:flex space-x-0">
             <Link href="/home">
-              <div className="flex flex-col items-center justify-center px-3 py-2 rounded-xl hover:bg-gray-700/30 transition-all duration-300 bg-gray-700/20 backdrop-blur-sm border border-gray-600/30"
-                data-testid="link-home"
-              >
-                <Home className="h-4 w-4 text-blue-400 mb-1" />
-                <span className="text-xs text-blue-400 font-medium">Trang chủ</span>
+              <div className={`flex items-center justify-center px-8 py-3 border-b-3 transition-all duration-200 ${
+                location === "/" || location === "/home" 
+                  ? "border-blue-500 bg-gray-700/30" 
+                  : "border-transparent hover:bg-gray-700/20 hover:border-gray-500"
+              }`} data-testid="link-home">
+                <Home className={`h-6 w-6 ${
+                  location === "/" || location === "/home" ? "text-blue-500" : "text-gray-400"
+                }`} />
               </div>
             </Link>
             <Link href="/friends">
-              <div className="flex flex-col items-center justify-center px-3 py-2 rounded-xl hover:bg-gray-700/30 transition-all duration-300"
-                data-testid="link-friends"
-              >
-                <Users className="h-4 w-4 text-gray-300 mb-1" />
-                <span className="text-xs text-gray-300 font-medium">Bạn bè</span>
+              <div className={`flex items-center justify-center px-8 py-3 border-b-3 transition-all duration-200 ${
+                location === "/friends" 
+                  ? "border-blue-500 bg-gray-700/30" 
+                  : "border-transparent hover:bg-gray-700/20 hover:border-gray-500"
+              }`} data-testid="link-friends">
+                <Users className={`h-6 w-6 ${
+                  location === "/friends" ? "text-blue-500" : "text-gray-400"
+                }`} />
               </div>
             </Link>
             <Link href="/beauty-contest">
-              <div className="flex flex-col items-center justify-center px-3 py-2 rounded-xl hover:bg-gray-700/30 transition-all duration-300"
-                data-testid="link-watch"
-              >
-                <Tv className="h-4 w-4 text-gray-300 mb-1" />
-                <span className="text-xs text-gray-300 font-medium">Cuộc thi</span>
+              <div className={`flex items-center justify-center px-8 py-3 border-b-3 transition-all duration-200 ${
+                location === "/beauty-contest" 
+                  ? "border-blue-500 bg-gray-700/30" 
+                  : "border-transparent hover:bg-gray-700/20 hover:border-gray-500"
+              }`} data-testid="link-watch">
+                <Tv className={`h-6 w-6 ${
+                  location === "/beauty-contest" ? "text-blue-500" : "text-gray-400"
+                }`} />
               </div>
             </Link>
             <Link href="/groups">
-              <div className="flex flex-col items-center justify-center px-3 py-2 rounded-xl hover:bg-gray-700/30 transition-all duration-300"
-                data-testid="link-marketplace"
-              >
-                <Store className="h-4 w-4 text-gray-300 mb-1" />
-                <span className="text-xs text-gray-300 font-medium">Nhóm</span>
-              </div>
-            </Link>
-            <Link href="/events">
-              <div className="flex flex-col items-center justify-center px-3 py-2 rounded-xl hover:bg-gray-700/30 transition-all duration-300"
-                data-testid="link-gaming"
-              >
-                <Gamepad2 className="h-4 w-4 text-gray-300 mb-1" />
-                <span className="text-xs text-gray-300 font-medium">Sự kiện</span>
+              <div className={`flex items-center justify-center px-8 py-3 border-b-3 transition-all duration-200 ${
+                location === "/groups" 
+                  ? "border-blue-500 bg-gray-700/30" 
+                  : "border-transparent hover:bg-gray-700/20 hover:border-gray-500"
+              }`} data-testid="link-marketplace">
+                <Store className={`h-6 w-6 ${
+                  location === "/groups" ? "text-blue-500" : "text-gray-400"
+                }`} />
               </div>
             </Link>
           </nav>
 
-          {/* Mobile Navigation - Bottom Bar for smaller screens */}
-          <div className="fixed bottom-0 left-0 right-0 bg-gradient-to-t from-gray-900 via-gray-800 to-gray-700/90 border-t border-gray-600 lg:hidden z-50 backdrop-blur-lg shadow-2xl">
-            <div className="grid grid-cols-5 py-2 px-1">
+          {/* Mobile Navigation - Compact Facebook style */}
+          <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 lg:hidden z-50 shadow-lg">
+            <div className="grid grid-cols-5 py-1">
               <Link href="/home">
-                <div className="flex flex-col items-center justify-center p-2" data-testid="mobile-link-home">
-                  <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-blue-600 to-purple-600 flex items-center justify-center mb-1 shadow-lg border border-gray-600/30">
-                    <Home className="h-5 w-5 text-white" />
-                  </div>
-                  <span className="text-xs text-blue-400 font-bold">Trang chủ</span>
+                <div className="flex items-center justify-center p-3" data-testid="mobile-link-home">
+                  <Home className={`h-6 w-6 ${
+                    location === "/" || location === "/home" ? "text-blue-500" : "text-gray-500"
+                  }`} />
                 </div>
               </Link>
               <Link href="/friends">
-                <div className="flex flex-col items-center justify-center p-2" data-testid="mobile-link-friends">
-                  <div className="w-10 h-10 rounded-2xl bg-gray-700/50 border border-gray-600/30 flex items-center justify-center mb-1">
-                    <Users className="h-5 w-5 text-gray-300" />
-                  </div>
-                  <span className="text-xs text-gray-300 font-medium">Bạn bè</span>
+                <div className="flex items-center justify-center p-3" data-testid="mobile-link-friends">
+                  <Users className={`h-6 w-6 ${
+                    location === "/friends" ? "text-blue-500" : "text-gray-500"
+                  }`} />
                 </div>
               </Link>
               <Link href="/beauty-contest">
-                <div className="flex flex-col items-center justify-center p-2" data-testid="mobile-link-watch">
-                  <div className="w-10 h-10 rounded-2xl bg-gray-700/50 border border-gray-600/30 flex items-center justify-center mb-1">
-                    <Tv className="h-5 w-5 text-gray-300" />
-                  </div>
-                  <span className="text-xs text-gray-300 font-medium">Cuộc thi</span>
+                <div className="flex items-center justify-center p-3" data-testid="mobile-link-watch">
+                  <Tv className={`h-6 w-6 ${
+                    location === "/beauty-contest" ? "text-blue-500" : "text-gray-500"
+                  }`} />
                 </div>
               </Link>
               <Link href="/groups">
-                <div className="flex flex-col items-center justify-center p-2" data-testid="mobile-link-marketplace">
-                  <div className="w-10 h-10 rounded-2xl bg-gray-700/50 border border-gray-600/30 flex items-center justify-center mb-1">
-                    <Store className="h-5 w-5 text-gray-300" />
-                  </div>
-                  <span className="text-xs text-gray-300 font-medium">Nhóm</span>
+                <div className="flex items-center justify-center p-3" data-testid="mobile-link-marketplace">
+                  <Store className={`h-6 w-6 ${
+                    location === "/groups" ? "text-blue-500" : "text-gray-500"
+                  }`} />
                 </div>
               </Link>
               <Link href="/notifications">
-                <div className="flex flex-col items-center justify-center p-2 relative" data-testid="mobile-link-notifications">
-                  <div className="w-10 h-10 rounded-2xl bg-gray-700/50 border border-gray-600/30 flex items-center justify-center mb-1 relative">
-                    <Bell className="h-5 w-5 text-gray-300" />
-                    {unreadCount.count > 0 && (
-                      <span className="absolute -top-1 -right-1 bg-blue-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-bold animate-bounce min-w-[20px]">
-                        {unreadCount.count > 9 ? '9+' : unreadCount.count}
-                      </span>
-                    )}
-                  </div>
-                  <span className="text-xs text-gray-300 font-medium">Thông báo</span>
+                <div className="flex items-center justify-center p-3 relative" data-testid="mobile-link-notifications">
+                  <Bell className={`h-6 w-6 ${
+                    location === "/notifications" ? "text-blue-500" : "text-gray-500"
+                  }`} />
+                  {unreadCount.count > 0 && (
+                    <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-bold min-w-[20px]">
+                      {unreadCount.count > 9 ? '9+' : unreadCount.count}
+                    </span>
+                  )}
                 </div>
               </Link>
             </div>
