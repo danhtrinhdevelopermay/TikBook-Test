@@ -3,8 +3,11 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Desktop Layout Fixes */
-@media (min-width: 1024px) {
+/* Force Desktop Layout for Large Screens - Multiple Browser Support */
+@media screen and (min-width: 1024px), 
+       only screen and (min-width: 1024px),
+       screen and (min-device-width: 1024px) {
+  
   html {
     font-size: 16px;
   }
@@ -14,10 +17,91 @@
     overflow-x: auto;
   }
   
-  .desktop-layout {
-    min-width: 1024px;
-    width: 100%;
+  /* Force desktop container to always flex on large screens */
+  .desktop-container {
+    display: flex !important;
+    max-width: 1280px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    gap: 1.5rem !important;
+    padding-top: 1rem !important;
   }
+  
+  /* Force ALL desktop elements to show - Chrome specific fixes */
+  .hidden.lg\\:block,
+  .lg\\:block {
+    display: block !important;
+    visibility: visible !important;
+  }
+  
+  .lg\\:hidden {
+    display: none !important;
+  }
+  
+  .lg\\:flex {
+    display: flex !important;
+  }
+  
+  /* Ensure sidebars always show on desktop */
+  .hidden.lg\\:block.lg\\:w-80,
+  .lg\\:w-80 {
+    display: block !important;
+    width: 20rem !important;
+    flex-shrink: 0 !important;
+  }
+  
+  /* Force main content layout */
+  .lg\\:max-w-2xl {
+    max-width: 42rem !important;
+  }
+  
+  .lg\\:mx-auto {
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+  
+  /* Chrome DevTools responsive mode fixes */
+  .lg\\:pt-4 {
+    padding-top: 1rem !important;
+  }
+  
+  /* Force header to show on desktop */
+  header.hidden.lg\\:block {
+    display: block !important;
+  }
+}
+
+/* Additional Chrome-specific fixes */
+@supports (-webkit-appearance: none) {
+  @media screen and (min-width: 1024px) {
+    .desktop-container {
+      display: -webkit-box !important;
+      display: -webkit-flex !important;
+      display: flex !important;
+    }
+    
+    .lg\\:block {
+      display: block !important;
+    }
+  }
+}
+
+/* Force desktop layout when body has the class */
+body.force-desktop-layout .desktop-container {
+  display: flex !important;
+  max-width: 1280px !important;
+  margin: 0 auto !important;
+  gap: 1.5rem !important;
+  padding-top: 1rem !important;
+}
+
+body.force-desktop-layout .hidden.lg\\:block,
+body.force-desktop-layout .lg\\:block {
+  display: block !important;
+}
+
+body.force-desktop-layout .lg\\:hidden {
+  display: none !important;
 }
 
 /* Hide scrollbars */
