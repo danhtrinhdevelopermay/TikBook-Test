@@ -59,12 +59,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
     store: sessionStore,
     secret: process.env.SESSION_SECRET || 'your-secret-key-change-in-production',
     resave: false,
-    saveUninitialized: false,
+    saveUninitialized: true, // Create sessions for all visitors
     cookie: {
-      secure: false, // Always false - render.com uses proxy
-      httpOnly: false, // Allow client-side access for debugging
+      secure: false, // Always false - Replit and Render use proxy
+      httpOnly: false, // Allow client-side access for debugging  
       maxAge: 24 * 60 * 60 * 1000, // 24 hours
-      sameSite: 'none', // None for cross-origin requests
+      sameSite: 'lax', // Always lax for better compatibility
       domain: undefined, // Let browser decide the domain
     },
     name: 'sessionId',
@@ -1603,6 +1603,32 @@ export async function registerRoutes(app: Express): Promise<Server> {
         error: error instanceof Error ? error.message : "Test failed"
       });
     }
+  });
+
+  // Debug session endpoint
+  app.get('/api/debug/session', (req, res) => {
+    res.json({
+      sessionId: req.session.id,
+      userId: req.session.userId,
+      hasUser: !!req.session.user,
+      cookies: req.headers.cookie,
+      origin: req.headers.origin,
+      userAgent: req.headers['user-agent'],
+      host: req.headers.host,
+      sameSite: req.session.cookie.sameSite,
+      secure: req.session.cookie.secure,
+      httpOnly: req.session.cookie.httpOnly,
+      nodeEnv: process.env.NODE_ENV,
+    });
+  });
+
+  // Generic routes  
+  app.get('/api/placeholder/:size', (req, res) => {
+    const size = parseInt(req.params.size);
+    res.json({ 
+      url: `https://via.placeholder.com/${size}`, 
+      alt: `Placeholder ${size}x${size}` 
+    });
   });
 
   const httpServer = createServer(app);

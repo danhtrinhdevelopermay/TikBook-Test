@@ -31,6 +31,7 @@ import AdminBeautyContest from "@/pages/admin-beauty-contest";
 import StorageManagement from "@/pages/storage-management";
 import VideosPage from "@/pages/videos";
 import TestLogin from "@/pages/test-login";
+import DebugSession from "@/pages/debug-session";
 
 function AuthenticatedRoutes() {
   console.log("📍 AuthenticatedRoutes component is rendering");
@@ -93,6 +94,7 @@ function AuthenticatedRoutes() {
       <Route path="/admin/storage" component={StorageManagement} />
       <Route path="/videos" component={VideosPage} />
       <Route path="/test-login" component={TestLogin} />
+      <Route path="/debug-session" component={DebugSession} />
       <Route>{() => {
         console.log("❌ No route matched, rendering NotFound");
         return <NotFound />;
@@ -108,6 +110,7 @@ function UnauthenticatedRoutes() {
       <Route path="/signin" component={SignIn} />
       <Route path="/signup" component={SignUp} />
       <Route path="/test-login" component={TestLogin} />
+      <Route path="/debug-session" component={DebugSession} />
       <Route component={NotFound} />
     </Switch>
   );
