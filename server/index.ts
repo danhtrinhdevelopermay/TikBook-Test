@@ -5,36 +5,16 @@ import { startStoryCleanupScheduler } from "./story-cleaner";
 
 const app = express();
 
-// Enhanced CORS configuration for development and production
+// Simplified CORS configuration - allow all for development
 app.use((req, res, next) => {
   const origin = req.get('origin');
   const host = req.get('host');
   
-  console.log(`CORS DEBUG: Origin=${origin}, Host=${host}, Method=${req.method}`);
-  
-  // Allow requests from development and production origins
-  if (process.env.NODE_ENV === 'production') {
-    // For same-domain requests on Render, origin might be null or the same domain
-    if (!origin || origin === `https://${host}` || origin === `http://${host}`) {
-      res.header('Access-Control-Allow-Origin', origin || `https://${host}`);
-    }
-  } else {
-    // Development mode: be more permissive but still secure
-    const allowedOrigins = [
-      'http://localhost:5000',
-      'http://127.0.0.1:5000',
-      `http://${host}`,
-      `https://${host}`,
-    ];
-    
-    if (!origin || allowedOrigins.some(allowed => origin?.startsWith(allowed))) {
-      res.header('Access-Control-Allow-Origin', origin || `http://${host}`);
-    }
-  }
-  
+  // Always allow credentials and set permissive headers
+  res.header('Access-Control-Allow-Origin', origin || `https://${host}`);
   res.header('Access-Control-Allow-Credentials', 'true');
   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS, PATCH');
-  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization, Cache-Control, Pragma, Cookie');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization, Cache-Control, Pragma, Cookie, Set-Cookie');
   
   // Handle preflight requests
   if (req.method === 'OPTIONS') {

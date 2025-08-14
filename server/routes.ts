@@ -61,10 +61,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
     resave: false,
     saveUninitialized: false,
     cookie: {
-      secure: false, // Always false for development and render.com
-      httpOnly: true,
+      secure: false, // Always false - render.com uses proxy
+      httpOnly: false, // Allow client-side access for debugging
       maxAge: 24 * 60 * 60 * 1000, // 24 hours
-      sameSite: 'lax', // Always lax for better compatibility
+      sameSite: 'none', // None for cross-origin requests
       domain: undefined, // Let browser decide the domain
     },
     name: 'sessionId',
