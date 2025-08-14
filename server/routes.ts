@@ -64,7 +64,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       secure: process.env.NODE_ENV === 'production',
       httpOnly: true,
       maxAge: 24 * 60 * 60 * 1000, // 24 hours
-      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+      sameSite: process.env.NODE_ENV === 'production' ? 'strict' : 'lax',
     },
     name: 'sessionId',
   }));
@@ -115,11 +115,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   app.post("/api/auth/signin", async (req, res) => {
+    console.log("=== SIGNIN DEBUG ===");
+    console.log("Request body:", req.body);
+    console.log("Session before:", req.session);
+    
     try {
       const { email, password } = signInSchema.parse(req.body);
       
       const user = await storage.authenticateUser(email, password);
       if (!user) {
+        console.log("❌ Authentication failed for email:", email);
         return res.status(401).json({ message: "Invalid email or password" });
       }
 
@@ -127,10 +132,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
       req.session.userId = user.id;
       req.session.user = user;
       
+      console.log("✅ Session created:");
+      console.log("Session ID:", req.session.id);
+      console.log("Session userId:", req.session.userId);
+      console.log("Session user email:", user.email);
+      
       // Don't send password back
       const { password: _, ...userWithoutPassword } = user;
       res.json({ user: userWithoutPassword, message: "Signed in successfully" });
     } catch (error) {
+      console.error("❌ Signin error:", error);
       if (error instanceof z.ZodError) {
         return res.status(400).json({ message: "Invalid login data", errors: error.errors });
       }
@@ -159,10 +170,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Get current user
-  app.get("/api/users/me", requireAuth, async (req, res) => {
+  app.get("/api/users/me", async (req, res) => {
+    console.log("=== GET /api/users/me DEBUG ===");
+    console.log("Request headers:", req.headers);
+    console.log("Session:", req.session);
+    console.log("Session ID:", req.session.id);
+    console.log("Session userId:", req.session.userId);
+    console.log("Cookie:", req.headers.cookie);
+    
+    if (!req.session.userId) {
+      console.log("❌ No session userId found, sending 401");
+      return res.status(401).json({ message: "Authentication required" });
+    }
+    
     try {
+      console.log("✅ User authenticated, fetching user data...");
       const user = await storage.getUserById(req.session.userId!);
       if (!user) {
+        console.log("❌ User not found in database");
         return res.status(404).json({ message: "User not found" });
       }
       
@@ -171,8 +196,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       // Don't send password back
       const { password, ...userWithoutPassword } = user;
+      console.log("✅ Returning user data for:", userWithoutPassword.email);
       res.json(userWithoutPassword);
     } catch (error) {
+      console.error("❌ Error in /api/users/me:", error);
       res.status(500).json({ message: "Failed to fetch user" });
     }
   });

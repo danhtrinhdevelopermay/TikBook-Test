@@ -11,7 +11,10 @@ app.use((req, res, next) => {
   
   // Allow requests from the same domain in production
   if (process.env.NODE_ENV === 'production') {
-    res.header('Access-Control-Allow-Origin', origin);
+    // For same-domain requests on Render, origin might be null or the same domain
+    if (!origin || origin === `https://${req.get('host')}`) {
+      res.header('Access-Control-Allow-Origin', origin || `https://${req.get('host')}`);
+    }
   } else {
     res.header('Access-Control-Allow-Origin', '*');
   }
