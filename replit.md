@@ -11,33 +11,52 @@ A comprehensive social media platform built with React, Express, and PostgreSQL.
 - **Deployment**: Render.com
 
 ## Recent Changes (August 14, 2025)
-### Final Authentication and Session Fix
+
+### Authentication and Posts Display Fix
+**Issues Fixed**:
+1. Users not seeing posts due to authentication problems
+2. Mobile/desktop responsive design not working properly 
+3. Infinite 401 authentication loops
+
+**Root Causes**:
+- Router showing authenticated routes even when user not logged in
+- Session userId was missing from browser sessions
+- Responsive breakpoints not properly configured
+
+**Solutions Implemented**:
+1. **Authentication Routing Fix** (`client/src/App.tsx`):
+   - Fixed Router component to properly check authentication status
+   - Added logic to show unauthenticated routes when user not logged in
+   - Eliminated infinite 401 error loops
+
+2. **Responsive Design Improvements** (`client/src/pages/home.tsx`):
+   - Separate desktop and mobile headers
+   - Proper responsive sidebar and navigation layout
+   - Mobile navigation only shows on small screens (lg:hidden)
+   - Desktop header and sidebars only show on large screens (lg:block)
+
+3. **Mobile Navigation Enhancement** (`client/src/components/ui/mobile-nav.tsx`):
+   - Added proper routing with wouter Link components
+   - Active state indication for current page
+   - Vietnamese labels and improved styling
+
+4. **Stories Component Responsive** (`client/src/components/feed/stories.tsx`):
+   - Responsive story card sizes (w-24 lg:w-28)
+   - Mobile-optimized spacing and heights
+   - Added scrollbar hiding CSS utility
+
+5. **CSS Utilities** (`client/src/index.css`):
+   - Added scrollbar-hide utility class
+   - Enhanced responsive breakpoint handling
+
+### Previous Authentication and Session Fix
 **Issue**: After deploying to render.com, users were redirected to landing page instead of home page after successful login, plus browser cookie persistence problems.
 
-**Root Cause**: 
-- Session store not properly configured for PostgreSQL
-- Browser sending stale cookies from previous sessions
-- SameSite cookie policy inconsistencies
-
-**Solution Implemented**:
-1. **Fixed PostgreSQL Session Store** (`server/routes.ts`):
-   - Set `createTableIfMissing: true` for automatic session table setup
-   - Configured `saveUninitialized: true` for better session handling
-   - Standardized `sameSite: 'lax'` for cross-environment compatibility
-
-2. **Clear Cookies Endpoint** (`/api/auth/clear-cookies`):
-   - Added endpoint to destroy stale sessions
-   - Browser can clear old cookies before new login attempts
-
-3. **Test Login Page** (`/test-login`):
-   - Created comprehensive test page for authentication debugging
-   - Tests login flow, user API, and posts API in sequence
-   - Auto-redirects to home page after successful authentication
-
-4. **Session Debugging Enhanced**:
-   - Added detailed session logging throughout authentication flow
-   - Clear visibility into cookie headers and session state
-   - Confirmed authentication works via curl and browser
+**Solutions**:
+1. **Fixed PostgreSQL Session Store** - Automatic session table setup
+2. **Clear Cookies Endpoint** - Browser session cleanup
+3. **Test Login Page** - Authentication debugging tools
+4. **Session Debugging Enhanced** - Detailed logging throughout flow
 
 ## User Preferences
 - Language: Vietnamese

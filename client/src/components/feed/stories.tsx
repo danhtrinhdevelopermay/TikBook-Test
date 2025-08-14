@@ -164,10 +164,10 @@ export default function Stories() {
 
   return (
     <>
-      <div className="bg-white rounded-lg shadow-sm p-4 mb-4">
-        <div className="flex space-x-4 overflow-x-auto">
+      <div className="bg-white rounded-lg shadow-sm p-3 lg:p-4 mb-4">
+        <div className="flex space-x-3 lg:space-x-4 overflow-x-auto scrollbar-hide">
           {/* Add Story */}
-          <div className="flex-shrink-0 w-28">
+          <div className="flex-shrink-0 w-24 lg:w-28">
             <div 
               className="relative bg-gray-800 dark:bg-gray-900 rounded-xl h-40 flex flex-col items-center justify-between p-3 cursor-pointer hover:bg-gray-700 dark:hover:bg-gray-800 transition-all duration-200 shadow-md hover:shadow-lg"
               data-testid="button-create-story"
@@ -200,9 +200,9 @@ export default function Stories() {
 
         {/* Existing Stories from API */}
         {stories.map((story) => (
-          <div key={story.id} className="flex-shrink-0 w-28">
+          <div key={story.id} className="flex-shrink-0 w-24 lg:w-28">
             <div 
-              className="relative rounded-lg h-40 overflow-hidden cursor-pointer hover:scale-105 transition-transform"
+              className="relative rounded-lg h-36 lg:h-40 overflow-hidden cursor-pointer hover:scale-105 transition-transform"
               data-testid={`story-${story.id}`}
               onClick={() => setLocation(`/story/${story.id}`)}
             >

@@ -20,6 +20,16 @@
   }
 }
 
+/* Hide scrollbars */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
 /* Ensure proper scaling on all devices */
 * {
   box-sizing: border-box;
