@@ -52,7 +52,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   const sessionStore = new PgStore({
     pool: pool,
     tableName: 'sessions',
-    createTableIfMissing: false,
+    createTableIfMissing: true, // Let it create the table if missing
   });
 
   app.use(session({
@@ -73,6 +73,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // Apply user attachment middleware to all routes
   app.use(attachUser);
+
+  // Clear cookies endpoint
+  app.post("/api/auth/clear-cookies", (req, res) => {
+    console.log("=== CLEARING COOKIES ===");
+    res.clearCookie('sessionId', { path: '/' });
+    req.session.destroy((err) => {
+      if (err) {
+        console.error("Session destroy error:", err);
+        return res.status(500).json({ message: "Failed to clear session" });
+      }
+      console.log("✅ Session destroyed and cookies cleared");
+      res.json({ message: "Cookies cleared successfully" });
+    });
+  });
 
   // Authentication routes
   app.post("/api/auth/signup", async (req, res) => {

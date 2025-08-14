@@ -11,34 +11,33 @@ A comprehensive social media platform built with React, Express, and PostgreSQL.
 - **Deployment**: Render.com
 
 ## Recent Changes (August 14, 2025)
-### Router Rebuild for Production Deployment
-**Issue**: After deploying to render.com, users were redirected to landing page instead of home page after successful login.
+### Final Authentication and Session Fix
+**Issue**: After deploying to render.com, users were redirected to landing page instead of home page after successful login, plus browser cookie persistence problems.
 
 **Root Cause**: 
-- Authentication state synchronization issues between client and server
-- Router logic not handling production environment authentication properly
-- SessionStorage markers being cleared too early
+- Session store not properly configured for PostgreSQL
+- Browser sending stale cookies from previous sessions
+- SameSite cookie policy inconsistencies
 
 **Solution Implemented**:
-1. **Enhanced Router Logic** (`client/src/App.tsx`):
-   - Priority-based routing system that favors authenticated routes
-   - Better handling of authentication markers and URL parameters
-   - Improved fallback logic for uncertain authentication states
+1. **Fixed PostgreSQL Session Store** (`server/routes.ts`):
+   - Set `createTableIfMissing: true` for automatic session table setup
+   - Configured `saveUninitialized: true` for better session handling
+   - Standardized `sameSite: 'lax'` for cross-environment compatibility
 
-2. **Improved Authentication Hook** (`client/src/hooks/useAuth.ts`):
-   - Extended timeout for authentication markers (60 seconds)
-   - Better cache handling with forced no-cache headers
-   - Delayed cleanup of session markers until successful authentication
+2. **Clear Cookies Endpoint** (`/api/auth/clear-cookies`):
+   - Added endpoint to destroy stale sessions
+   - Browser can clear old cookies before new login attempts
 
-3. **Enhanced SignIn Component** (`client/src/pages/signin.tsx`):
-   - Environment-specific redirect strategies
-   - Multiple redirect attempts for reliability
-   - Direct navigation to `/home` route in production
+3. **Test Login Page** (`/test-login`):
+   - Created comprehensive test page for authentication debugging
+   - Tests login flow, user API, and posts API in sequence
+   - Auto-redirects to home page after successful authentication
 
-4. **Smart AuthenticatedRoutes Component**:
-   - Force redirect logic from root to home after login
-   - URL parameter detection for authentication state
-   - Automatic URL cleanup after successful authentication
+4. **Session Debugging Enhanced**:
+   - Added detailed session logging throughout authentication flow
+   - Clear visibility into cookie headers and session state
+   - Confirmed authentication works via curl and browser
 
 ## User Preferences
 - Language: Vietnamese

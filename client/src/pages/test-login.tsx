@@ -9,11 +9,25 @@ export default function TestLogin() {
   const [result, setResult] = useState<string>("");
   const [loading, setLoading] = useState(false);
 
+  const clearCookies = async () => {
+    try {
+      await fetch("/api/auth/clear-cookies", {
+        method: "POST",
+        credentials: "include",
+      });
+      console.log("🧹 Cookies cleared");
+    } catch (err) {
+      console.error("Failed to clear cookies:", err);
+    }
+  };
+
   const handleLogin = async () => {
     setLoading(true);
     setResult("");
     
     try {
+      // Clear old cookies first
+      await clearCookies();
       console.log("🧪 Testing login with:", { email, password });
       
       const response = await fetch("/api/auth/signin", {
@@ -34,9 +48,10 @@ export default function TestLogin() {
         setResult(`✅ Đăng nhập thành công! User: ${data.user.username}`);
         console.log("🧪 Login success:", data);
         
-        // Test API call with session
+        // Test API calls with session
         setTimeout(async () => {
           try {
+            // Test user API
             const meResponse = await fetch("/api/users/me", {
               credentials: "include",
             });
@@ -44,9 +59,27 @@ export default function TestLogin() {
             
             if (meResponse.ok) {
               const userData = await meResponse.json();
-              setResult(prev => prev + `\n✅ API test thành công! User: ${userData.username}`);
+              setResult(prev => prev + `\n✅ User API thành công! User: ${userData.username}`);
+              
+              // Test posts feed API
+              const postsResponse = await fetch("/api/posts/feed", {
+                credentials: "include",
+              });
+              console.log("🧪 /api/posts/feed status:", postsResponse.status);
+              
+              if (postsResponse.ok) {
+                const postsData = await postsResponse.json();
+                setResult(prev => prev + `\n✅ Posts API thành công! Có ${postsData.length} bài viết`);
+                
+                // Redirect to home page after successful login
+                setTimeout(() => {
+                  window.location.href = '/';
+                }, 1000);
+              } else {
+                setResult(prev => prev + `\n❌ Posts API thất bại: ${postsResponse.status}`);
+              }
             } else {
-              setResult(prev => prev + `\n❌ API test thất bại: ${meResponse.status}`);
+              setResult(prev => prev + `\n❌ User API thất bại: ${meResponse.status}`);
             }
           } catch (err) {
             setResult(prev => prev + `\n❌ API test lỗi: ${err}`);
