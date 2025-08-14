@@ -3,6 +3,10 @@ set -e
 
 echo "🏗️ Building Social Media App for Production..."
 
+# Install dependencies first
+echo "📦 Installing dependencies..."
+npm ci
+
 # Clean previous builds
 echo "🧹 Cleaning previous builds..."
 rm -rf dist/
@@ -10,7 +14,7 @@ rm -rf server/public/
 
 # Build client with Vite
 echo "📦 Building client..."
-vite build
+npm run build
 
 # Verify client build exists
 if [ ! -d "dist/public" ]; then
@@ -18,9 +22,8 @@ if [ ! -d "dist/public" ]; then
   exit 1
 fi
 
-# Build server with esbuild  
-echo "🔧 Building server..."
-esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist
+# Server build is handled by npm run build command above
+echo "🔧 Server build completed via npm run build"
 
 # Verify server build exists
 if [ ! -f "dist/index.js" ]; then
