@@ -20,18 +20,31 @@ export function useAuth() {
       const signupSuccess = sessionStorage.getItem('signupSuccess');
       const loginTime = sessionStorage.getItem('loginTime');
       const signupTime = sessionStorage.getItem('signupTime');
+      const redirectTo = sessionStorage.getItem('redirectTo');
       
-      if (loginSuccess || signupSuccess) {
-        const timestamp = loginTime || signupTime;
-        const timeDiff = Date.now() - parseInt(timestamp || '0');
-        if (timeDiff < 10000) { // Within 10 seconds
+      // Check URL parameters for authentication indicators
+      const urlParams = new URLSearchParams(window.location.search);
+      const authenticatedParam = urlParams.get('authenticated');
+      
+      if (loginSuccess || signupSuccess || authenticatedParam) {
+        const timestamp = loginTime || signupTime || Date.now().toString();
+        const timeDiff = Date.now() - parseInt(timestamp);
+        if (timeDiff < 30000) { // Extended to 30 seconds
           console.log("🎯 Recent login/signup detected, forcing fresh auth check");
+          console.log("📍 Redirect target:", redirectTo || 'home');
         }
-        // Clean up markers
+        // Clean up markers after successful check
         sessionStorage.removeItem('loginSuccess');
         sessionStorage.removeItem('signupSuccess');
         sessionStorage.removeItem('loginTime');
         sessionStorage.removeItem('signupTime');
+        sessionStorage.removeItem('redirectTo');
+        
+        // Clean URL if it has auth parameters
+        if (authenticatedParam && window.history.replaceState) {
+          const cleanUrl = window.location.pathname;
+          window.history.replaceState({}, '', cleanUrl);
+        }
       }
       
       const response = await fetch("/api/users/me", {

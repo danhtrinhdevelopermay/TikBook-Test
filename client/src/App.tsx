@@ -102,15 +102,20 @@ function Router() {
     );
   }
 
-  // If there's an authentication error, show unauthenticated routes
-  if (isError) {
-    console.log("Authentication error detected, showing unauthenticated routes");
+  // Check for production authentication markers
+  const loginSuccess = typeof window !== 'undefined' && sessionStorage.getItem('loginSuccess');
+  const redirectTo = typeof window !== 'undefined' && sessionStorage.getItem('redirectTo');
+  
+  // If there's an authentication error BUT we have recent login markers, still try authenticated routes
+  if (isError && !loginSuccess) {
+    console.log("Authentication error detected (no recent login), showing unauthenticated routes");
     return <UnauthenticatedRoutes />;
   }
 
-  // Proper routing based on authentication status
-  if (isAuthenticated) {
-    console.log("User is authenticated, showing authenticated routes");
+  // Enhanced authentication routing
+  if (isAuthenticated || loginSuccess) {
+    console.log("User is authenticated (or recent login detected), showing authenticated routes");
+    console.log("🎯 Target page:", redirectTo || 'home');
     return <AuthenticatedRoutes />;
   } else {
     console.log("User is not authenticated, showing unauthenticated routes");

@@ -52,21 +52,25 @@ export default function SignIn() {
       
       console.log("Environment detection:", { isOnRender, isDevelopment });
       
+      // Special handling for production environment  
       if (isOnRender || !isDevelopment) {
-        console.log("Production/Render environment: using full page reload");
-        // For production, mark successful login in sessionStorage
+        console.log("🔥 Production/Render environment: implementing comprehensive redirect strategy");
+        
+        // Step 1: Mark successful login and force auth state update
         sessionStorage.setItem('loginSuccess', 'true');
         sessionStorage.setItem('loginTime', Date.now().toString());
+        sessionStorage.setItem('redirectTo', 'home');
         
-        // Invalidate queries and wait for persistence
-        await queryClient.invalidateQueries({ queryKey: ["/api/users/me"] });
-        await new Promise(resolve => setTimeout(resolve, 1000)); // Increased delay
+        // Step 2: Immediately set user data in cache to prevent auth loss
+        queryClient.setQueryData(["/api/users/me"], result.user);
         
-        // Use replace to avoid browser history issues and add timestamp to force refresh
-        window.location.replace("/?_t=" + Date.now());
+        // Step 3: Wait longer for state persistence  
+        await new Promise(resolve => setTimeout(resolve, 1500));
+        
+        // Step 4: Use location.href for guaranteed navigation
+        window.location.href = "/?authenticated=true&_t=" + Date.now();
       } else {
         console.log("Development environment: using client-side navigation");
-        // Invalidate and refetch for development
         await queryClient.invalidateQueries({ queryKey: ["/api/users/me"] });
         await new Promise(resolve => setTimeout(resolve, 500));
         setLocation("/");
