@@ -61,12 +61,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
     resave: false,
     saveUninitialized: false,
     cookie: {
-      secure: process.env.NODE_ENV === 'production',
+      secure: false, // Always false for development and render.com
       httpOnly: true,
       maxAge: 24 * 60 * 60 * 1000, // 24 hours
-      sameSite: process.env.NODE_ENV === 'production' ? 'strict' : 'lax',
+      sameSite: 'lax', // Always lax for better compatibility
+      domain: undefined, // Let browser decide the domain
     },
     name: 'sessionId',
+    rolling: true, // Refresh session on each request
   }));
 
   // Apply user attachment middleware to all routes
@@ -231,12 +233,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/users/me", async (req, res) => {
     console.log("=== GET /api/users/me DEBUG ===");
     console.log("NODE_ENV:", process.env.NODE_ENV);
-    console.log("Request headers:", JSON.stringify({
+    console.log("Request headers:", {
       cookie: req.headers.cookie,
       origin: req.headers.origin,
       host: req.headers.host,
       'user-agent': req.headers['user-agent']
-    }, null, 2));
+    });
     console.log("Session:", req.session);
     console.log("Session ID:", req.session?.id);
     console.log("Session userId:", req.session?.userId);
