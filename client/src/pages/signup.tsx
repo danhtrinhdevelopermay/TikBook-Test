@@ -61,27 +61,28 @@ export default function SignUp() {
         description: "Tài khoản đã được tạo và bạn đã đăng nhập.",
       });
       
-      // Immediately set user data in cache to ensure authentication state is updated
+      // Set user data in cache immediately
       queryClient.setQueryData(["/api/users/me"], result.user);
       
-      // Force refetch to ensure data consistency
-      await queryClient.refetchQueries({ queryKey: ["/api/users/me"] });
-      
-      // Wait for state to properly update
-      await new Promise(resolve => setTimeout(resolve, 100));
-      
-      // Always use client-side navigation for development environment
+      // Determine environment
+      const isOnRender = window.location.hostname.includes('onrender.com');
       const isDevelopment = window.location.hostname === 'localhost' || 
                            window.location.hostname.includes('replit.dev') ||
                            window.location.hostname.includes('5000');
       
-      if (isDevelopment) {
-        console.log("Development environment: using client-side navigation to setup-profile");
-        setLocation("/setup-profile");
+      console.log("Environment detection:", { isOnRender, isDevelopment });
+      
+      if (isOnRender || !isDevelopment) {
+        console.log("Production/Render environment: using full page reload to setup-profile");
+        // For production (especially Render), use full page reload with delay
+        await new Promise(resolve => setTimeout(resolve, 200));
+        window.location.replace("/setup-profile");
       } else {
-        console.log("Production environment: using full page reload for redirect to setup-profile");
-        // Use full page reload to ensure fresh authentication state in production
-        window.location.href = "/setup-profile";
+        console.log("Development environment: using client-side navigation to setup-profile");
+        // Invalidate and refetch for development
+        await queryClient.invalidateQueries({ queryKey: ["/api/users/me"] });
+        await new Promise(resolve => setTimeout(resolve, 100));
+        setLocation("/setup-profile");
       }
       
     } catch (err: any) {

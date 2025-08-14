@@ -93,14 +93,15 @@ export default function SetupProfile() {
       await new Promise(resolve => setTimeout(resolve, 100));
       
       // Navigate to home page after profile setup
+      const isOnRender = window.location.hostname.includes('onrender.com');
       const isDevelopment = window.location.hostname === 'localhost' || 
                            window.location.hostname.includes('replit.dev') ||
                            window.location.hostname.includes('5000');
       
-      if (isDevelopment) {
-        setLocation("/home");
+      if (isOnRender || !isDevelopment) {
+        window.location.replace("/home");
       } else {
-        window.location.href = "/home";
+        setLocation("/home");
       }
     },
     onError: (error: any) => {
@@ -114,14 +115,15 @@ export default function SetupProfile() {
 
   const handleSkip = () => {
     // Navigate to home page when skipping profile setup
+    const isOnRender = window.location.hostname.includes('onrender.com');
     const isDevelopment = window.location.hostname === 'localhost' || 
                          window.location.hostname.includes('replit.dev') ||
                          window.location.hostname.includes('5000');
     
-    if (isDevelopment) {
-      setLocation("/home");
+    if (isOnRender || !isDevelopment) {
+      window.location.replace("/home");
     } else {
-      window.location.href = "/home";
+      setLocation("/home");
     }
   };
 

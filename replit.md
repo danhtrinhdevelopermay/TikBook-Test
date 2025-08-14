@@ -13,7 +13,14 @@ A dynamic social media platform built with React, Express.js, and PostgreSQL, fo
 - Media Storage: Cloudinary integration
 - Video Playback: Advanced custom video player with interactive controls
 
-## Recent Changes
+## Recent Changes  
+- **Authentication Redirect Fix (August 14, 2025)**: Resolved 404 errors after successful login/signup on production
+  - **Environment-Specific Redirect Strategy**: Enhanced redirect logic to detect onrender.com environment specifically
+  - **Production Navigation**: Using `window.location.replace()` instead of `window.location.href` for production to avoid browser history issues
+  - **Improved State Management**: Better authentication state synchronization before redirect with optimized delays
+  - **Cache Management**: Streamlined query cache updates - set data immediately, then invalidate for consistency
+  - **Development vs Production**: Clear separation between development (client-side routing) and production (full page reload) navigation
+
 - **Complete Render Deploy Fix (August 14, 2025)**: Resolved persistent 404 errors after successful login/signup on Render
   - **Root Cause Discovery**: Issue wasn't just session persistence but client-side navigation race conditions in production
   - **Production Redirect Strategy**: Implemented environment-specific navigation - `window.location.href` for production (full reload) vs `setLocation` for development (client routing)
