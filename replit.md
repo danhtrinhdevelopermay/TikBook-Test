@@ -14,6 +14,13 @@ A dynamic social media platform built with React, Express.js, and PostgreSQL, fo
 - Video Playback: Advanced custom video player with interactive controls
 
 ## Recent Changes
+- **SPA Routing Fix for Render (August 14, 2025)**: Fixed 404 errors after login/signup on Render deployment
+  - Identified issue: mismatch between Vite build output (`dist/public`) and server static file location (`server/public`)  
+  - Created `deploy.sh` script to properly copy client files to correct location for production
+  - Added `RENDER_DEPLOY.md` with comprehensive deployment instructions
+  - Root cause: In production, server expects static files in `server/public` but Vite builds to `dist/public`
+  - Solution ensures SPA routes like `/home` and `/setup-profile` work correctly after authentication
+
 - **Production Deployment Fixes (August 14, 2025)**: Fixed authentication redirect issues for Render deployment
   - Updated session configuration with proper CORS and cookie settings for production
   - Added secure session handling with sameSite and secure cookie options
