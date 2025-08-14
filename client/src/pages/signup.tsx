@@ -59,13 +59,11 @@ export default function SignUp() {
         description: "Tài khoản đã được tạo và bạn đã đăng nhập.",
       });
       
-      // Wait for mutation to fully complete and cache to update
-      await new Promise(resolve => setTimeout(resolve, 100));
+      // Wait longer for authentication state to propagate
+      await new Promise(resolve => setTimeout(resolve, 500));
       
-      // Navigate to setup profile page with a small delay to ensure state update
-      setTimeout(() => {
-        setLocation("/setup-profile");
-      }, 200);
+      // Force a window reload to ensure fresh authentication state
+      window.location.href = "/setup-profile";
       
     } catch (err: any) {
       console.error("SignUp error:", err);

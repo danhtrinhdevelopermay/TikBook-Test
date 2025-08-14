@@ -55,10 +55,10 @@ export function useAuth() {
       return response.json();
     },
     onSuccess: (data) => {
+      // Set user data immediately in cache
       queryClient.setQueryData(["/api/users/me"], data.user);
+      // Invalidate to trigger refetch
       queryClient.invalidateQueries({ queryKey: ["/api/users/me"] });
-      // Force re-render by clearing cache and refetching
-      queryClient.resetQueries({ queryKey: ["/api/users/me"] });
     },
   });
 
@@ -82,10 +82,10 @@ export function useAuth() {
       return response.json();
     },
     onSuccess: (data) => {
+      // Set user data immediately in cache
       queryClient.setQueryData(["/api/users/me"], data.user);
+      // Invalidate to trigger refetch
       queryClient.invalidateQueries({ queryKey: ["/api/users/me"] });
-      // Force re-render by clearing cache and refetching
-      queryClient.resetQueries({ queryKey: ["/api/users/me"] });
     },
   });
 

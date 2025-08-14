@@ -39,13 +39,11 @@ export default function SignIn() {
         description: "Bạn đã đăng nhập thành công.",
       });
       
-      // Wait for mutation to fully complete and cache to update
-      await new Promise(resolve => setTimeout(resolve, 100));
+      // Wait longer for authentication state to propagate
+      await new Promise(resolve => setTimeout(resolve, 500));
       
-      // Navigate to home page with a small delay to ensure state update
-      setTimeout(() => {
-        setLocation("/home");
-      }, 200);
+      // Force a window reload to ensure fresh authentication state
+      window.location.href = "/home";
       
     } catch (err: any) {
       console.error("SignIn error:", err);
