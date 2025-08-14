@@ -137,7 +137,7 @@ body.force-desktop-layout .lg\\:hidden {
 }
 
 /* Aggressive desktop layout enforcement */
-@media screen and (min-width: 1024px) {
+@media screen and (min-width: 800px) {
   /* Hide ALL mobile-only elements */
   [class*="lg:hidden"],
   .lg\\:hidden {
@@ -166,6 +166,34 @@ body.force-desktop-layout .lg\\:hidden {
     position: static !important;
     left: auto !important;
   }
+}
+
+/* Force desktop layout class - no media query needed */
+body.force-desktop-layout [class*="lg:hidden"],
+body.force-desktop-layout .lg\\:hidden {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  position: absolute !important;
+  left: -9999px !important;
+}
+
+body.force-desktop-layout [class*="hidden"][class*="lg:block"],
+body.force-desktop-layout .hidden.lg\\:block {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  position: static !important;
+  left: auto !important;
+}
+
+body.force-desktop-layout [class*="hidden"][class*="lg:flex"],
+body.force-desktop-layout .hidden.lg\\:flex {
+  display: flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  position: static !important;
+  left: auto !important;
 }
 
 /* Hide scrollbars */

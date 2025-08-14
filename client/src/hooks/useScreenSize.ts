@@ -15,9 +15,9 @@ export function useScreenSize() {
       const width = window.innerWidth;
       const height = window.innerHeight;
       
-      // Force desktop for screens wider than 1024px
-      const isDesktop = width >= 1024;
-      const isMobile = width < 1024;
+      // Force desktop for screens wider than 800px (Chrome mobile desktop mode)
+      const isDesktop = width >= 800;
+      const isMobile = width < 800;
       
       setScreenSize({
         width,
@@ -26,22 +26,41 @@ export function useScreenSize() {
         isMobile,
       });
       
-      // Force desktop layout classes on large screens
-      if (isDesktop) {
+      // Force desktop layout based on screen size OR user agent
+      const isMobileDevice = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+      const forceDesktop = isDesktop || (isMobileDevice && width > 800); // Mobile in desktop mode
+      
+      console.log('🖥️ Screen detection:', { 
+        width, 
+        height, 
+        isDesktop, 
+        isMobile, 
+        isMobileDevice, 
+        forceDesktop,
+        userAgent: navigator.userAgent
+      });
+      
+      if (forceDesktop) {
+        console.log('✅ Forcing desktop layout');
         document.body.classList.add('force-desktop-layout');
         document.documentElement.style.setProperty('--is-desktop', '1');
-        // Prevent mobile viewport scaling
+        // Remove any existing viewport tag to let mobile use default desktop viewport
         const viewport = document.querySelector('meta[name=viewport]');
         if (viewport) {
-          viewport.setAttribute('content', 'width=1024, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no');
+          viewport.remove();
+          console.log('🔄 Removed viewport meta tag');
         }
       } else {
+        console.log('📱 Using mobile layout');
         document.body.classList.remove('force-desktop-layout');
         document.documentElement.style.setProperty('--is-desktop', '0');
-        // Allow mobile viewport scaling
-        const viewport = document.querySelector('meta[name=viewport]');
-        if (viewport) {
-          viewport.setAttribute('content', 'width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes');
+        // Add responsive viewport for true mobile
+        if (!document.querySelector('meta[name=viewport]')) {
+          const viewport = document.createElement('meta');
+          viewport.name = 'viewport';
+          viewport.content = 'width=device-width, initial-scale=1.0';
+          document.head.appendChild(viewport);
+          console.log('📱 Added mobile viewport meta tag');
         }
       }
     };
