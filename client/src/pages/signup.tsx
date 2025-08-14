@@ -75,8 +75,9 @@ export default function SignUp() {
       if (isOnRender || !isDevelopment) {
         console.log("Production/Render environment: using full page reload to setup-profile");
         // For production (especially Render), use full page reload with delay
-        await new Promise(resolve => setTimeout(resolve, 200));
-        window.location.replace("/setup-profile");
+        await new Promise(resolve => setTimeout(resolve, 500));
+        // Use replace to avoid browser history issues and add timestamp to force refresh
+        window.location.replace("/setup-profile?_t=" + Date.now());
       } else {
         console.log("Development environment: using client-side navigation to setup-profile");
         // Invalidate and refetch for development

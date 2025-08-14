@@ -55,14 +55,15 @@ export default function SignIn() {
       if (isOnRender || !isDevelopment) {
         console.log("Production/Render environment: using full page reload");
         // For production (especially Render), use full page reload with delay
-        await new Promise(resolve => setTimeout(resolve, 200));
-        window.location.replace("/home");
+        await new Promise(resolve => setTimeout(resolve, 500));
+        // Use replace to avoid browser history issues and add timestamp to force refresh
+        window.location.replace("/?_t=" + Date.now());
       } else {
         console.log("Development environment: using client-side navigation");
         // Invalidate and refetch for development
         await queryClient.invalidateQueries({ queryKey: ["/api/users/me"] });
         await new Promise(resolve => setTimeout(resolve, 100));
-        setLocation("/home");
+        setLocation("/");
       }
       
     } catch (err: any) {

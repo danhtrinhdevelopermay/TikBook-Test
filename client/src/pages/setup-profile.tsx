@@ -99,9 +99,9 @@ export default function SetupProfile() {
                            window.location.hostname.includes('5000');
       
       if (isOnRender || !isDevelopment) {
-        window.location.replace("/home");
+        window.location.replace("/?_t=" + Date.now());
       } else {
-        setLocation("/home");
+        setLocation("/");
       }
     },
     onError: (error: any) => {
@@ -121,9 +121,9 @@ export default function SetupProfile() {
                          window.location.hostname.includes('5000');
     
     if (isOnRender || !isDevelopment) {
-      window.location.replace("/home");
+      window.location.replace("/?_t=" + Date.now());
     } else {
-      setLocation("/home");
+      setLocation("/");
     }
   };
 

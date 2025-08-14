@@ -14,12 +14,12 @@ A dynamic social media platform built with React, Express.js, and PostgreSQL, fo
 - Video Playback: Advanced custom video player with interactive controls
 
 ## Recent Changes  
-- **Authentication Redirect Fix (August 14, 2025)**: Resolved 404 errors after successful login/signup on production
-  - **Environment-Specific Redirect Strategy**: Enhanced redirect logic to detect onrender.com environment specifically
-  - **Production Navigation**: Using `window.location.replace()` instead of `window.location.href` for production to avoid browser history issues
-  - **Improved State Management**: Better authentication state synchronization before redirect with optimized delays
-  - **Cache Management**: Streamlined query cache updates - set data immediately, then invalidate for consistency
-  - **Development vs Production**: Clear separation between development (client-side routing) and production (full page reload) navigation
+- **Authentication Redirect Fix v2 (August 14, 2025)**: Final fix for 404 errors after login/signup on Render production
+  - **Root Path Redirect**: Changed redirect target from `/home` to `/` (root path) to ensure proper SPA routing
+  - **Enhanced Timing**: Increased delay to 500ms for better authentication state synchronization
+  - **Cache Busting**: Added timestamp parameter (`?_t=`) to force fresh page load and avoid caching issues
+  - **Improved Build Process**: Enhanced deploy.sh with verification steps and detailed logging
+  - **Production Detection**: Specific onrender.com detection for environment-aware navigation logic
 
 - **Complete Render Deploy Fix (August 14, 2025)**: Resolved persistent 404 errors after successful login/signup on Render
   - **Root Cause Discovery**: Issue wasn't just session persistence but client-side navigation race conditions in production
