@@ -32,10 +32,16 @@ import StorageManagement from "@/pages/storage-management";
 import VideosPage from "@/pages/videos";
 
 function AuthenticatedRoutes() {
+  console.log("📍 AuthenticatedRoutes component is rendering");
+  console.log("📍 Current pathname:", window.location.pathname);
+  
   return (
     <Switch>
       <Route path="/" component={Home} />
-      <Route path="/home" component={Home} />
+      <Route path="/home">{() => {
+        console.log("🏠 /home route matched!");
+        return <Home />;
+      }}</Route>
       <Route path="/setup-profile" component={SetupProfile} />
       <Route path="/friends" component={FriendsPage} />
       <Route path="/groups" component={GroupsPage} />
@@ -57,7 +63,10 @@ function AuthenticatedRoutes() {
       <Route path="/admin/beauty-contest" component={AdminBeautyContest} />
       <Route path="/admin/storage" component={StorageManagement} />
       <Route path="/videos" component={VideosPage} />
-      <Route component={NotFound} />
+      <Route>{() => {
+        console.log("❌ No route matched, rendering NotFound");
+        return <NotFound />;
+      }}</Route>
     </Switch>
   );
 }

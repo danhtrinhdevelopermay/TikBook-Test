@@ -7,6 +7,8 @@ import NewsFeed from "@/components/feed/news-feed";
 import MobileNav from "@/components/ui/mobile-nav";
 
 export default function Home() {
+  console.log("🏠 Home component is rendering");
+  
   return (
     <div className="min-h-screen bg-background">
       <Header />

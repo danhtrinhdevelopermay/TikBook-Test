@@ -4,6 +4,8 @@ import { AlertCircle, Home } from "lucide-react";
 import { Link } from "wouter";
 
 export default function NotFound() {
+  console.log("❌ NotFound component is rendering - current URL:", window.location.pathname);
+  
   return (
     <div className="min-h-screen w-full flex items-center justify-center bg-gray-50 dark:bg-gray-900">
       <Card className="w-full max-w-md mx-4">
