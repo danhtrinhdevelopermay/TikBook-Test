@@ -54,11 +54,11 @@ export function useAuth() {
       
       return response.json();
     },
-    onSuccess: (data) => {
+    onSuccess: async (data) => {
       // Set user data immediately in cache
       queryClient.setQueryData(["/api/users/me"], data.user);
-      // Invalidate to trigger refetch
-      queryClient.invalidateQueries({ queryKey: ["/api/users/me"] });
+      // Force refetch to ensure fresh data
+      await queryClient.refetchQueries({ queryKey: ["/api/users/me"] });
     },
   });
 
@@ -81,11 +81,11 @@ export function useAuth() {
       
       return response.json();
     },
-    onSuccess: (data) => {
+    onSuccess: async (data) => {
       // Set user data immediately in cache
       queryClient.setQueryData(["/api/users/me"], data.user);
-      // Invalidate to trigger refetch
-      queryClient.invalidateQueries({ queryKey: ["/api/users/me"] });
+      // Force refetch to ensure fresh data
+      await queryClient.refetchQueries({ queryKey: ["/api/users/me"] });
     },
   });
 

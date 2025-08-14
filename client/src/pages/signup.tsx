@@ -59,11 +59,11 @@ export default function SignUp() {
         description: "Tài khoản đã được tạo và bạn đã đăng nhập.",
       });
       
-      // Wait longer for authentication state to propagate
-      await new Promise(resolve => setTimeout(resolve, 500));
+      // Wait for mutation to complete and cache to update
+      await new Promise(resolve => setTimeout(resolve, 200));
       
-      // Force a window reload to ensure fresh authentication state
-      window.location.href = "/setup-profile";
+      // Use React Router navigation instead of window.location  
+      setLocation("/setup-profile");
       
     } catch (err: any) {
       console.error("SignUp error:", err);
