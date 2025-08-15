@@ -233,14 +233,14 @@ export default function Header() {
           {/* Right Section: Actions & Profile */}
           <div className="flex items-center space-x-2">
             {/* Notifications */}
-            <Link href="/notifications" className="hidden sm:block">
+            <Link href="/notifications">
               <button 
-                className="w-10 h-10 bg-gray-700/30 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-gray-600/40 hover:scale-105 transition-all duration-300 relative border border-gray-600/30"
+                className="w-8 h-8 sm:w-10 sm:h-10 bg-gray-700/30 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-gray-600/40 hover:scale-105 transition-all duration-300 relative border border-gray-600/30"
                 data-testid="button-notifications"
               >
-                <Bell className="h-5 w-5 text-gray-300" />
+                <Bell className="h-4 w-4 sm:h-5 sm:w-5 text-gray-300" />
                 {unreadCount.count > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-blue-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center min-w-[20px] font-bold shadow-lg animate-pulse">
+                  <span className="absolute -top-1 -right-1 bg-blue-500 text-white text-xs rounded-full h-4 w-4 sm:h-5 sm:w-5 flex items-center justify-center min-w-[16px] sm:min-w-[20px] font-bold shadow-lg animate-pulse">
                     {unreadCount.count > 99 ? '99+' : unreadCount.count}
                   </span>
                 )}
@@ -248,12 +248,12 @@ export default function Header() {
             </Link>
             
             {/* Messages */}
-            <Link href="/messages" className="hidden sm:block">
+            <Link href="/messages">
               <button 
-                className="w-10 h-10 bg-gray-700/30 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-gray-600/40 hover:scale-105 transition-all duration-300 border border-gray-600/30"
+                className="w-8 h-8 sm:w-10 sm:h-10 bg-gray-700/30 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-gray-600/40 hover:scale-105 transition-all duration-300 border border-gray-600/30"
                 data-testid="button-messages"
               >
-                <MessageCircle className="h-5 w-5 text-gray-300" />
+                <MessageCircle className="h-4 w-4 sm:h-5 sm:w-5 text-gray-300" />
               </button>
             </Link>
 
