@@ -19,21 +19,21 @@ export default function NewsFeed() {
 
   if (isLoading) {
     return (
-      <div className="space-y-4">
+      <div className="space-y-6">
         {Array.from({ length: 3 }).map((_, i) => (
-          <div key={i} className="bg-white rounded-lg shadow-sm p-4 animate-pulse">
-            <div className="flex items-center space-x-3 mb-4">
-              <div className="w-10 h-10 bg-gray-300 rounded-full"></div>
+          <div key={i} className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl p-6 animate-pulse">
+            <div className="flex items-center space-x-4 mb-4">
+              <div className="w-12 h-12 bg-gradient-to-br from-purple-300 to-pink-300 rounded-full"></div>
               <div>
-                <div className="w-24 h-4 bg-gray-300 rounded mb-2"></div>
-                <div className="w-16 h-3 bg-gray-300 rounded"></div>
+                <div className="w-24 h-5 bg-gray-300 rounded-lg mb-2"></div>
+                <div className="w-16 h-4 bg-gray-300 rounded-lg"></div>
               </div>
             </div>
-            <div className="w-full h-32 bg-gray-300 rounded mb-4"></div>
+            <div className="w-full h-36 bg-gradient-to-br from-gray-200 to-gray-300 rounded-xl mb-4"></div>
             <div className="flex justify-around">
-              <div className="w-16 h-8 bg-gray-300 rounded"></div>
-              <div className="w-16 h-8 bg-gray-300 rounded"></div>
-              <div className="w-16 h-8 bg-gray-300 rounded"></div>
+              <div className="w-20 h-10 bg-gray-300 rounded-xl"></div>
+              <div className="w-20 h-10 bg-gray-300 rounded-xl"></div>
+              <div className="w-20 h-10 bg-gray-300 rounded-xl"></div>
             </div>
           </div>
         ))}
@@ -51,13 +51,13 @@ export default function NewsFeed() {
       ))}
       
       {/* Load More */}
-      <div className="text-center py-6">
+      <div className="text-center py-8">
         <Button 
           variant="outline"
-          className="bg-secondary hover:bg-border text-foreground px-6 py-2"
+          className="bg-white/90 backdrop-blur-sm hover:bg-gradient-to-r hover:from-purple-500 hover:to-blue-600 hover:text-white text-gray-700 border-gray-300 px-8 py-3 rounded-xl shadow-lg transition-all duration-300 font-semibold"
           data-testid="button-load-more"
         >
-          Load more posts
+          Tải thêm bài viết
         </Button>
       </div>
     </div>

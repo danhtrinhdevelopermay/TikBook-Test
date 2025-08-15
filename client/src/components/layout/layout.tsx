@@ -10,7 +10,7 @@ interface LayoutProps {
 
 export default function Layout({ children }: LayoutProps) {
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen bg-gradient-to-br from-purple-400 via-pink-300 to-blue-400">
       <Header />
       <div className="max-w-7xl mx-auto flex px-2 sm:px-4 lg:px-6">
         {/* Left Sidebar - hiển thị từ lg (1024px) trở lên */}

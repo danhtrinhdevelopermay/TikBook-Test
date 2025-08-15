@@ -24,8 +24,8 @@ export default function MobileNav() {
   ];
 
   return (
-    <nav className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-50 shadow-lg" data-testid="mobile-nav">
-      <div className="grid grid-cols-5 py-1">
+    <nav className="lg:hidden fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-sm border-t border-gray-200/50 z-50 shadow-xl" data-testid="mobile-nav">
+      <div className="grid grid-cols-5 py-2 px-2">
         {mainNavItems.map((item) => {
           const isActive = location === item.href || (item.href === "/" && location === "/home");
           const Icon = item.icon;
@@ -33,11 +33,15 @@ export default function MobileNav() {
           return (
             <Link key={item.href} href={item.href}>
               <div 
-                className="flex items-center justify-center p-3"
+                className={`flex items-center justify-center p-3 rounded-xl transition-all duration-200 ${
+                  isActive 
+                    ? "bg-gradient-to-br from-purple-400 to-blue-500 shadow-lg transform scale-105" 
+                    : "hover:bg-purple-50"
+                }`}
                 data-testid={item.testId}
               >
                 <Icon className={`h-6 w-6 ${
-                  isActive ? "text-blue-600" : "text-gray-500"
+                  isActive ? "text-white" : "text-gray-600"
                 }`} />
               </div>
             </Link>

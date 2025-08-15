@@ -176,21 +176,21 @@ export default function Post({ post, comments = [] }: PostProps) {
   };
 
   return (
-    <article className="bg-white rounded-lg shadow-sm mb-4" data-testid={`post-${post.id}`}>
+    <article className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl mb-6 overflow-hidden" data-testid={`post-${post.id}`}>
       {/* Post Header */}
-      <div className="p-4 flex items-center justify-between">
-        <div className="flex items-center space-x-3">
+      <div className="p-6 flex items-center justify-between">
+        <div className="flex items-center space-x-4">
           <Link href={`/user/${post.user.id}`}>
             <img 
               src={post.user.profileImage || "/default-avatar.jpg"} 
               alt={`${post.user.firstName} ${post.user.lastName}`} 
-              className="w-10 h-10 rounded-full cursor-pointer hover:opacity-80 transition-opacity"
+              className="w-12 h-12 rounded-full cursor-pointer hover:opacity-80 transition-all duration-200 bg-gradient-to-br from-purple-400 to-pink-400 border-3 border-white shadow-lg"
               data-testid={`img-author-${post.id}`}
             />
           </Link>
           <div>
             <Link href={`/user/${post.user.id}`}>
-              <h3 className="font-semibold text-foreground hover:underline cursor-pointer" data-testid={`text-author-name-${post.id}`}>
+              <h3 className="font-semibold text-gray-800 hover:underline cursor-pointer text-lg" data-testid={`text-author-name-${post.id}`}>
                 <UserNameWithBadge 
                   firstName={post.user.firstName}
                   lastName={post.user.lastName}
@@ -198,7 +198,7 @@ export default function Post({ post, comments = [] }: PostProps) {
                 />
               </h3>
             </Link>
-            <p className="text-sm text-muted-foreground" data-testid={`text-post-time-${post.id}`}>
+            <p className="text-sm text-gray-600 font-medium" data-testid={`text-post-time-${post.id}`}>
               {formatTimeAgo(post.createdAt!)} · 🌍
             </p>
           </div>
@@ -206,23 +206,23 @@ export default function Post({ post, comments = [] }: PostProps) {
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <button 
-              className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-secondary transition-colors"
+              className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-purple-100 transition-all duration-200"
               data-testid={`button-post-options-${post.id}`}
             >
-              <MoreHorizontal className="h-4 w-4 text-muted-foreground" />
+              <MoreHorizontal className="h-5 w-5 text-gray-600" />
             </button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuItem>
+          <DropdownMenuContent align="end" className="bg-white/95 backdrop-blur-sm shadow-xl rounded-xl border border-gray-200">
+            <DropdownMenuItem className="hover:bg-purple-50 rounded-lg">
               Chỉnh sửa bài viết
             </DropdownMenuItem>
-            <DropdownMenuItem>
+            <DropdownMenuItem className="hover:bg-purple-50 rounded-lg">
               Lưu bài viết
             </DropdownMenuItem>
-            <DropdownMenuItem>
+            <DropdownMenuItem className="hover:bg-purple-50 rounded-lg">
               Ẩn bài viết
             </DropdownMenuItem>
-            <DropdownMenuItem className="text-red-600">
+            <DropdownMenuItem className="text-red-600 hover:bg-red-50 rounded-lg">
               Xóa bài viết
             </DropdownMenuItem>
           </DropdownMenuContent>
@@ -230,9 +230,9 @@ export default function Post({ post, comments = [] }: PostProps) {
       </div>
 
       {/* Post Content */}
-      <div className="px-4 pb-3">
+      <div className="px-6 pb-4">
         <Link href={`/post/${post.id}`}>
-          <p className="text-foreground mb-3 hover:bg-gray-50 cursor-pointer transition-colors p-2 -m-2 rounded" data-testid={`text-post-content-${post.id}`}>
+          <p className="text-gray-800 mb-4 hover:bg-purple-50 cursor-pointer transition-all duration-200 p-3 -m-3 rounded-xl text-lg leading-relaxed" data-testid={`text-post-content-${post.id}`}>
             {post.content}
           </p>
         </Link>
@@ -269,32 +269,32 @@ export default function Post({ post, comments = [] }: PostProps) {
       </div>
 
       {/* Post Stats */}
-      <div className="px-4 py-2 flex items-center justify-between text-sm text-muted-foreground border-b border-border">
-        <div className="flex items-center space-x-1">
+      <div className="px-6 py-3 flex items-center justify-between text-sm text-gray-600 border-b border-gray-100">
+        <div className="flex items-center space-x-2">
           <div className="flex -space-x-1">
-            <span className="w-5 h-5 bg-primary rounded-full flex items-center justify-center">
+            <span className="w-6 h-6 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center shadow-md">
               <ThumbsUp className="h-3 w-3 text-white" />
             </span>
-            <span className="w-5 h-5 bg-red-500 rounded-full flex items-center justify-center">
+            <span className="w-6 h-6 bg-gradient-to-br from-red-500 to-pink-600 rounded-full flex items-center justify-center shadow-md">
               <Heart className="h-3 w-3 text-white" />
             </span>
           </div>
-          <span data-testid={`text-likes-count-${post.id}`}>{post.likesCount} lượt thích</span>
+          <span className="font-medium" data-testid={`text-likes-count-${post.id}`}>{post.likesCount} lượt thích</span>
         </div>
         <div className="flex space-x-4">
           <button 
             onClick={() => setShowComments(!showComments)}
-            className="hover:underline"
+            className="hover:underline font-medium transition-colors hover:text-purple-600"
             data-testid={`button-toggle-comments-${post.id}`}
           >
             {post.commentsCount} bình luận
           </button>
-          <span data-testid={`text-shares-count-${post.id}`}>{post.sharesCount} lượt chia sẻ</span>
+          <span className="font-medium" data-testid={`text-shares-count-${post.id}`}>{post.sharesCount} lượt chia sẻ</span>
         </div>
       </div>
 
       {/* Post Actions */}
-      <div className="px-4 py-2 flex justify-around border-b border-border">
+      <div className="px-6 py-4 flex justify-around border-b border-gray-100">
         <Popover open={showReactionPicker} onOpenChange={setShowReactionPicker}>
           <PopoverTrigger asChild>
             <Button 
@@ -302,16 +302,18 @@ export default function Post({ post, comments = [] }: PostProps) {
               onClick={handleQuickLike}
               onMouseEnter={() => setShowReactionPicker(true)}
               disabled={toggleReactionMutation.isPending}
-              className={`flex items-center space-x-2 px-4 py-2 rounded-lg hover:bg-secondary transition-colors flex-1 justify-center ${
-                post.isLiked ? 'text-primary' : 'text-muted-foreground'
+              className={`flex items-center space-x-2 px-6 py-3 rounded-xl transition-all duration-200 flex-1 justify-center font-semibold ${
+                post.isLiked 
+                  ? 'text-purple-600 bg-purple-50 hover:bg-purple-100' 
+                  : 'text-gray-600 hover:bg-purple-50 hover:text-purple-600'
               }`}
               data-testid={`button-like-${post.id}`}
             >
-              <ThumbsUp className={`h-4 w-4 ${post.isLiked ? 'fill-current' : ''}`} />
-              <span className="font-medium">{post.isLiked ? 'Đã thích' : 'Thích'}</span>
+              <ThumbsUp className={`h-5 w-5 ${post.isLiked ? 'fill-current' : ''}`} />
+              <span>{post.isLiked ? 'Đã thích' : 'Thích'}</span>
             </Button>
           </PopoverTrigger>
-          <PopoverContent className="w-auto p-2" side="top">
+          <PopoverContent className="w-auto p-3 bg-white/95 backdrop-blur-sm shadow-xl rounded-xl border border-gray-200" side="top">
             <div className="flex space-x-2">
               {reactionTypes.map((reaction) => {
                 const IconComponent = reaction.icon;
@@ -319,10 +321,10 @@ export default function Post({ post, comments = [] }: PostProps) {
                   <button
                     key={reaction.type}
                     onClick={() => handleReaction(reaction.type)}
-                    className={`p-2 rounded-full hover:scale-110 transition-transform ${reaction.bgColor} hover:${reaction.bgColor}/80`}
+                    className={`p-3 rounded-full hover:scale-110 transition-all duration-200 ${reaction.bgColor} hover:${reaction.bgColor}/80 shadow-lg`}
                     title={reaction.type}
                   >
-                    <IconComponent className="h-4 w-4 text-white" />
+                    <IconComponent className="h-5 w-5 text-white" />
                   </button>
                 );
               })}
@@ -333,32 +335,32 @@ export default function Post({ post, comments = [] }: PostProps) {
         <Button 
           variant="ghost"
           onClick={() => setShowComments(!showComments)}
-          className="flex items-center space-x-2 px-4 py-2 rounded-lg hover:bg-secondary transition-colors flex-1 justify-center text-muted-foreground"
+          className="flex items-center space-x-2 px-6 py-3 rounded-xl hover:bg-blue-50 hover:text-blue-600 transition-all duration-200 flex-1 justify-center text-gray-600 font-semibold"
           data-testid={`button-comment-${post.id}`}
         >
-          <MessageCircle className="h-4 w-4" />
-          <span className="font-medium">Bình luận</span>
+          <MessageCircle className="h-5 w-5" />
+          <span>Bình luận</span>
         </Button>
 
         <Button 
           variant="ghost"
           onClick={() => setShowShareDialog(true)}
-          className="flex items-center space-x-2 px-4 py-2 rounded-lg hover:bg-secondary transition-colors flex-1 justify-center text-muted-foreground"
+          className="flex items-center space-x-2 px-6 py-3 rounded-xl hover:bg-green-50 hover:text-green-600 transition-all duration-200 flex-1 justify-center text-gray-600 font-semibold"
           data-testid={`button-share-${post.id}`}
         >
-          <Share className="h-4 w-4" />
-          <span className="font-medium">Chia sẻ</span>
+          <Share className="h-5 w-5" />
+          <span>Chia sẻ</span>
         </Button>
       </div>
 
       {/* Comments Section */}
       {showComments && (
-        <div className="px-4 py-3" data-testid={`comments-section-${post.id}`}>
-          <div className="flex items-start space-x-3 mb-3">
+        <div className="px-6 py-4" data-testid={`comments-section-${post.id}`}>
+          <div className="flex items-start space-x-4 mb-4">
             <img 
               src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&w=32&h=32&fit=crop&crop=face" 
               alt="Your profile" 
-              className="w-8 h-8 rounded-full"
+              className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-400 to-pink-400 border-2 border-white shadow-md"
             />
             <div className="flex-1 relative">
               <Input
@@ -367,14 +369,14 @@ export default function Post({ post, comments = [] }: PostProps) {
                 value={commentText}
                 onChange={(e) => setCommentText(e.target.value)}
                 onKeyPress={handleKeyPress}
-                className="w-full bg-secondary rounded-full px-4 py-2 border-none text-sm"
+                className="w-full bg-gray-50 rounded-2xl px-4 py-3 border-none text-sm focus:bg-white focus:ring-2 focus:ring-purple-500 transition-all duration-200"
                 data-testid={`input-comment-${post.id}`}
               />
               {commentText && (
                 <Button
                   onClick={handleComment}
                   disabled={createCommentMutation.isPending}
-                  className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-primary text-white px-3 py-1 text-xs"
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 bg-gradient-to-r from-purple-500 to-blue-600 hover:from-purple-600 hover:to-blue-700 text-white px-4 py-1 text-sm rounded-xl"
                   data-testid={`button-submit-comment-${post.id}`}
                 >
                   Đăng
@@ -384,24 +386,24 @@ export default function Post({ post, comments = [] }: PostProps) {
           </div>
           
           {/* Existing Comments */}
-          <div className="space-y-3">
+          <div className="space-y-4">
             {comments.map((comment) => (
               <div key={comment.id} className="flex items-start space-x-3" data-testid={`comment-${comment.id}`}>
                 <img 
                   src={comment.user.profileImage || "https://via.placeholder.com/32"} 
                   alt={`${comment.user.firstName} ${comment.user.lastName}`} 
-                  className="w-8 h-8 rounded-full"
+                  className="w-9 h-9 rounded-full bg-gradient-to-br from-purple-400 to-pink-400 border-2 border-white shadow-md"
                 />
                 <div className="flex-1">
-                  <div className="bg-secondary rounded-2xl px-4 py-2">
-                    <p className="font-semibold text-sm text-foreground" data-testid={`text-comment-author-${comment.id}`}>
+                  <div className="bg-gray-50 rounded-2xl px-4 py-3 shadow-sm">
+                    <p className="font-semibold text-sm text-gray-800 mb-1" data-testid={`text-comment-author-${comment.id}`}>
                       <UserNameWithBadge 
                         firstName={comment.user.firstName}
                         lastName={comment.user.lastName}
                         badgeImageUrl={comment.user.badgeImageUrl}
                       />
                     </p>
-                    <p className="text-sm text-foreground" data-testid={`text-comment-content-${comment.id}`}>
+                    <p className="text-sm text-gray-700 leading-relaxed" data-testid={`text-comment-content-${comment.id}`}>
                       {comment.content}
                     </p>
                   </div>
