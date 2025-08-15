@@ -10,44 +10,43 @@ A comprehensive social media platform built with React, Express, and PostgreSQL.
 - **File Storage**: Cloudinary integration
 - **Deployment**: Render.com
 
-## Recent Changes (August 14, 2025)
+## Recent Changes (August 15, 2025)
 
-### Authentication and Posts Display Fix
+### Facebook-Style Navigation Implementation
+**User Request**: Transform navigation to match Facebook's compact, mobile-first design with notification/message buttons in top header.
+
+**Changes Made**:
+1. **Mobile Bottom Navigation** (`client/src/components/ui/mobile-nav.tsx`):
+   - Reduced to 5 icons only (Home, Friends, Contest, Groups, Menu) like Facebook
+   - Removed text labels for cleaner look
+   - Added hamburger menu dropdown for additional pages
+   - Excluded admin pages from navigation menus
+
+2. **Top Header Notifications** (`client/src/components/layout/header.tsx`):
+   - Moved notification and message buttons to top navigation bar
+   - Made buttons visible on both mobile and desktop (removed hidden classes)
+   - Responsive sizing: smaller on mobile (8x8), larger on desktop (10x10)
+   - Added notification badge with count display
+
+3. **Menu Organization**:
+   - Main navigation: Only essential pages (Home, Friends, Contest, Groups)
+   - Dropdown menu: Secondary pages (Saved, Events, Videos, Memories, Profile)
+   - Clean separation between primary and secondary navigation
+
+**Result**: Navigation now matches Facebook's design philosophy with compact bottom nav and top-positioned notification/message buttons.
+
+### Previous Authentication and Posts Display Fix (August 14, 2025)
 **Issues Fixed**:
 1. Users not seeing posts due to authentication problems
 2. Mobile/desktop responsive design not working properly 
 3. Infinite 401 authentication loops
 
-**Root Causes**:
-- Router showing authenticated routes even when user not logged in
-- Session userId was missing from browser sessions
-- Responsive breakpoints not properly configured
-
 **Solutions Implemented**:
-1. **Authentication Routing Fix** (`client/src/App.tsx`):
-   - Fixed Router component to properly check authentication status
-   - Added logic to show unauthenticated routes when user not logged in
-   - Eliminated infinite 401 error loops
-
-2. **Responsive Design Improvements** (`client/src/pages/home.tsx`):
-   - Separate desktop and mobile headers
-   - Proper responsive sidebar and navigation layout
-   - Mobile navigation only shows on small screens (lg:hidden)
-   - Desktop header and sidebars only show on large screens (lg:block)
-
-3. **Mobile Navigation Enhancement** (`client/src/components/ui/mobile-nav.tsx`):
-   - Added proper routing with wouter Link components
-   - Active state indication for current page
-   - Vietnamese labels and improved styling
-
-4. **Stories Component Responsive** (`client/src/components/feed/stories.tsx`):
-   - Responsive story card sizes (w-24 lg:w-28)
-   - Mobile-optimized spacing and heights
-   - Added scrollbar hiding CSS utility
-
-5. **CSS Utilities** (`client/src/index.css`):
-   - Added scrollbar-hide utility class
-   - Enhanced responsive breakpoint handling
+1. **Authentication Routing Fix** - Proper route handling
+2. **Responsive Design Improvements** - Mobile/desktop layout optimization  
+3. **Mobile Navigation Enhancement** - Better routing and styling
+4. **Stories Component Responsive** - Mobile-optimized display
+5. **CSS Utilities** - Enhanced responsive breakpoints
 
 ### Previous Authentication and Session Fix
 **Issue**: After deploying to render.com, users were redirected to landing page instead of home page after successful login, plus browser cookie persistence problems.
