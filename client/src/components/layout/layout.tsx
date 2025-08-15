@@ -10,7 +10,7 @@ interface LayoutProps {
 
 export default function Layout({ children }: LayoutProps) {
   return (
-    <div className="min-h-screen bg-facebook-background desktop-layout">
+    <div className="min-h-screen bg-gray-100">
       <Header />
       <div className="max-w-7xl mx-auto flex px-2 sm:px-4 lg:px-6">
         {/* Left Sidebar - hiển thị từ lg (1024px) trở lên */}

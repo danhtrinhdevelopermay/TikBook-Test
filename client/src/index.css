@@ -178,6 +178,11 @@ body.force-desktop-layout .lg\\:hidden {
   display: none;
 }
 
+/* Facebook-style 3px border bottom for navigation */
+.border-b-3 {
+  border-bottom-width: 3px;
+}
+
 /* Ensure proper scaling on all devices */
 * {
   box-sizing: border-box;

@@ -31,86 +31,69 @@ export default function Header() {
   });
 
   return (
-    <header className="bg-gradient-to-r from-gray-900 via-gray-800 to-black shadow-2xl sticky top-0 z-50 border-b border-gray-700/50 backdrop-blur-lg">
+    <header className="bg-white shadow-md sticky top-0 z-50 border-b border-gray-200">
       <div className="max-w-7xl mx-auto px-3 sm:px-6">
-        <div className="flex items-center justify-between h-16 lg:h-18">
+        <div className="flex items-center justify-between h-14">
           {/* Left Section: Logo & Search */}
           <div className="flex items-center space-x-2 sm:space-x-4">
             <div className="flex items-center space-x-2 sm:space-x-3">
-              <div className="w-9 h-9 sm:w-11 sm:h-11 bg-gradient-to-br from-purple-600 to-blue-600 rounded-full flex items-center justify-center shadow-xl border-2 border-gray-500/30 relative">
-                <span className="text-white text-base sm:text-lg font-bold font-serif">💖</span>
-                <div className="absolute inset-0 rounded-full bg-gradient-to-br from-purple-400 to-blue-400 opacity-20 animate-pulse"></div>
+              <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center">
+                <span className="text-white text-lg font-bold">f</span>
               </div>
               <div className="hidden sm:block">
-                <h1 className="text-xl sm:text-2xl font-bold text-white font-serif tracking-wide drop-shadow-lg">
-                  Kết Nối Đẹp
-                </h1>
-                <p className="text-xs text-white/80 -mt-0.5 tracking-wide">Mạng xã hội văn hóa</p>
-              </div>
-              <div className="block sm:hidden">
-                <h1 className="text-lg font-bold text-white font-serif tracking-wide drop-shadow-lg">
-                  Kết Nối Đẹp
+                <h1 className="text-xl font-bold text-blue-600">
+                  Facebook
                 </h1>
               </div>
             </div>
             
             {/* Search Bar */}
-            <Link href="/search">
-              <div className="relative hidden md:block cursor-pointer ml-4">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Search className="h-4 w-4 text-gray-400" />
-                </div>
-                <div className="w-64 lg:w-80 pl-10 pr-4 py-2.5 bg-gray-800/90 backdrop-blur-sm rounded-full border border-gray-600 shadow-lg hover:shadow-xl hover:bg-gray-700/90 transition-all duration-300 flex items-center text-gray-300 text-sm">
-                  Tìm kiếm bạn bè, người đẹp...
-                </div>
-              </div>
-            </Link>
+            <div className="relative hidden md:block ml-4">
+              <input 
+                type="text"
+                placeholder="Tìm kiếm trên Facebook"
+                className="w-64 lg:w-80 px-4 py-2 pl-10 rounded-full bg-gray-100 border border-gray-300 text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
+              />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 h-4 w-4" />
+            </div>
           </div>
 
-          {/* Center Navigation - Compact Facebook style */}
+          {/* Center Navigation - Facebook style */}
           <nav className="hidden lg:flex space-x-0">
             <Link href="/home">
               <div className={`flex items-center justify-center px-8 py-3 border-b-3 transition-all duration-200 ${
                 location === "/" || location === "/home" 
-                  ? "border-blue-500 bg-gray-700/30" 
-                  : "border-transparent hover:bg-gray-700/20 hover:border-gray-500"
+                  ? "border-blue-600 text-blue-600" 
+                  : "border-transparent text-gray-500 hover:bg-gray-100"
               }`} data-testid="link-home">
-                <Home className={`h-6 w-6 ${
-                  location === "/" || location === "/home" ? "text-blue-500" : "text-gray-400"
-                }`} />
+                <Home className="h-6 w-6" />
               </div>
             </Link>
             <Link href="/friends">
               <div className={`flex items-center justify-center px-8 py-3 border-b-3 transition-all duration-200 ${
                 location === "/friends" 
-                  ? "border-blue-500 bg-gray-700/30" 
-                  : "border-transparent hover:bg-gray-700/20 hover:border-gray-500"
+                  ? "border-blue-600 text-blue-600" 
+                  : "border-transparent text-gray-500 hover:bg-gray-100"
               }`} data-testid="link-friends">
-                <Users className={`h-6 w-6 ${
-                  location === "/friends" ? "text-blue-500" : "text-gray-400"
-                }`} />
+                <Users className="h-6 w-6" />
               </div>
             </Link>
             <Link href="/beauty-contest">
               <div className={`flex items-center justify-center px-8 py-3 border-b-3 transition-all duration-200 ${
                 location === "/beauty-contest" 
-                  ? "border-blue-500 bg-gray-700/30" 
-                  : "border-transparent hover:bg-gray-700/20 hover:border-gray-500"
+                  ? "border-blue-600 text-blue-600" 
+                  : "border-transparent text-gray-500 hover:bg-gray-100"
               }`} data-testid="link-watch">
-                <Tv className={`h-6 w-6 ${
-                  location === "/beauty-contest" ? "text-blue-500" : "text-gray-400"
-                }`} />
+                <Tv className="h-6 w-6" />
               </div>
             </Link>
             <Link href="/groups">
               <div className={`flex items-center justify-center px-8 py-3 border-b-3 transition-all duration-200 ${
                 location === "/groups" 
-                  ? "border-blue-500 bg-gray-700/30" 
-                  : "border-transparent hover:bg-gray-700/20 hover:border-gray-500"
+                  ? "border-blue-600 text-blue-600" 
+                  : "border-transparent text-gray-500 hover:bg-gray-100"
               }`} data-testid="link-marketplace">
-                <Store className={`h-6 w-6 ${
-                  location === "/groups" ? "text-blue-500" : "text-gray-400"
-                }`} />
+                <Store className="h-6 w-6" />
               </div>
             </Link>
           </nav>
@@ -235,12 +218,12 @@ export default function Header() {
             {/* Notifications */}
             <Link href="/notifications">
               <button 
-                className="w-8 h-8 sm:w-10 sm:h-10 bg-gray-700/30 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-gray-600/40 hover:scale-105 transition-all duration-300 relative border border-gray-600/30"
+                className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center hover:bg-gray-200 transition-all duration-200 relative"
                 data-testid="button-notifications"
               >
-                <Bell className="h-4 w-4 sm:h-5 sm:w-5 text-gray-300" />
+                <Bell className="h-5 w-5 text-gray-600" />
                 {unreadCount.count > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-blue-500 text-white text-xs rounded-full h-4 w-4 sm:h-5 sm:w-5 flex items-center justify-center min-w-[16px] sm:min-w-[20px] font-bold shadow-lg animate-pulse">
+                  <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center min-w-[20px] font-bold">
                     {unreadCount.count > 99 ? '99+' : unreadCount.count}
                   </span>
                 )}
@@ -250,10 +233,10 @@ export default function Header() {
             {/* Messages */}
             <Link href="/messages">
               <button 
-                className="w-8 h-8 sm:w-10 sm:h-10 bg-gray-700/30 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-gray-600/40 hover:scale-105 transition-all duration-300 border border-gray-600/30"
+                className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center hover:bg-gray-200 transition-all duration-200"
                 data-testid="button-messages"
               >
-                <MessageCircle className="h-4 w-4 sm:h-5 sm:w-5 text-gray-300" />
+                <MessageCircle className="h-5 w-5 text-gray-600" />
               </button>
             </Link>
 
@@ -262,57 +245,56 @@ export default function Header() {
               <DropdownMenuTrigger asChild>
                 <Button 
                   variant="ghost" 
-                  className="flex items-center space-x-2 hover:bg-gray-700/30 rounded-full p-1.5 h-auto border border-gray-600/30 bg-gray-700/20 backdrop-blur-sm hover:scale-105 transition-all duration-300"
+                  className="flex items-center space-x-2 hover:bg-gray-100 rounded-full p-1.5 h-auto"
                   data-testid="button-profile"
                 >
                   <div className="relative">
                     <img 
                       src={user?.profileImage || "/default-avatar.jpg"} 
                       alt="User avatar" 
-                      className="w-8 h-8 sm:w-9 sm:h-9 rounded-full border-2 border-gray-500/50 shadow-lg"
+                      className="w-8 h-8 rounded-full"
                     />
-                    <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-green-400 rounded-full border-2 border-gray-800"></div>
                   </div>
-                  <span className="text-sm font-semibold text-gray-200 hidden md:block max-w-[120px] truncate">
+                  <span className="text-sm font-medium text-gray-900 hidden md:block max-w-[120px] truncate">
                     <UserNameWithBadge 
                       firstName={user?.firstName || ""}
                       lastName={user?.lastName || ""}
                       badgeImageUrl={user?.badgeImageUrl}
                     />
                   </span>
-                  <ChevronDown className="h-4 w-4 text-gray-300 hidden md:block" />
+                  <ChevronDown className="h-4 w-4 text-gray-600 hidden md:block" />
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-56 bg-gray-800/95 backdrop-blur-lg border border-gray-600/50 shadow-2xl rounded-2xl">
-                <div className="flex items-center space-x-3 p-3 bg-gradient-to-r from-gray-700/50 to-gray-800/50 rounded-t-2xl border-b border-gray-600/30">
+              <DropdownMenuContent align="end" className="w-56 bg-white border border-gray-200 shadow-lg rounded-lg">
+                <div className="flex items-center space-x-3 p-3 border-b border-gray-200">
                   <img 
                     src={user?.profileImage || "/default-avatar.jpg"} 
                     alt="User avatar" 
-                    className="w-10 h-10 rounded-full border-2 border-gray-500 shadow-md"
+                    className="w-10 h-10 rounded-full"
                   />
                   <div>
-                    <p className="text-sm font-bold text-gray-100">
+                    <p className="text-sm font-bold text-gray-900">
                       <UserNameWithBadge 
                         firstName={user?.firstName || ""}
                         lastName={user?.lastName || ""}
                         badgeImageUrl={user?.badgeImageUrl}
                       />
                     </p>
-                    <p className="text-xs text-gray-400">{user?.email}</p>
+                    <p className="text-xs text-gray-500">{user?.email}</p>
                   </div>
                 </div>
-                <DropdownMenuSeparator className="border-gray-600/50" />
-                <DropdownMenuItem className="py-3 px-4 hover:bg-gray-700/50 rounded-lg mx-2 my-1">
+                <DropdownMenuSeparator className="border-gray-200" />
+                <DropdownMenuItem className="py-3 px-4 hover:bg-gray-100">
                   <Link href="/profile" className="flex items-center w-full">
-                    <User className="mr-3 h-5 w-5 text-blue-400" />
-                    <span className="text-gray-200 font-medium">Hồ sơ cá nhân</span>
+                    <User className="mr-3 h-5 w-5 text-gray-600" />
+                    <span className="text-gray-900 font-medium">Hồ sơ cá nhân</span>
                   </Link>
                 </DropdownMenuItem>
-                <DropdownMenuItem className="py-3 px-4 hover:bg-gray-700/50 rounded-lg mx-2 my-1">
-                  <Settings className="mr-3 h-5 w-5 text-gray-400" />
-                  <span className="text-gray-200 font-medium">Cài đặt</span>
+                <DropdownMenuItem className="py-3 px-4 hover:bg-gray-100">
+                  <Settings className="mr-3 h-5 w-5 text-gray-600" />
+                  <span className="text-gray-900 font-medium">Cài đặt</span>
                 </DropdownMenuItem>
-                <DropdownMenuSeparator className="border-gray-600/50" />
+                <DropdownMenuSeparator className="border-gray-200" />
                 <DropdownMenuItem 
                   onClick={async () => {
                     try {
@@ -329,7 +311,7 @@ export default function Header() {
                       });
                     }
                   }}
-                  className="text-red-400 py-3 px-4 hover:bg-red-900/30 rounded-lg mx-2 my-1"
+                  className="text-red-600 py-3 px-4 hover:bg-red-50"
                   data-testid="button-signout"
                 >
                   <LogOut className="mr-3 h-5 w-5" />

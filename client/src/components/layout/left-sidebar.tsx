@@ -15,29 +15,31 @@ export default function LeftSidebar() {
 
   return (
     <aside className="hidden lg:block w-80 sticky top-20 h-fit">
-      <div className="bg-white rounded-lg shadow-sm p-3">
-        {/* User Profile Section - Compact */}
-        <div className="flex items-center space-x-3 mb-4 p-2 hover:bg-gray-100 rounded-lg cursor-pointer transition-colors">
-          <img 
-            src={user?.profileImage || "/default-avatar.jpg"} 
-            alt="User profile" 
-            className="w-9 h-9 rounded-full bg-gray-200"
-            data-testid="img-profile"
-          />
-          <div className="flex-1 min-w-0">
-            <h3 className="font-medium text-foreground text-sm truncate" data-testid="text-username">
-              {user && (
-                <UserNameWithBadge 
-                  firstName={user.firstName}
-                  lastName={user.lastName}
-                  badgeImageUrl={user.badgeImageUrl}
-                />
-              )}
-            </h3>
+      <div className="space-y-2">
+        {/* User Profile Section */}
+        <Link href="/profile">
+          <div className="flex items-center space-x-3 p-2 hover:bg-gray-100 rounded-lg cursor-pointer transition-colors">
+            <img 
+              src={user?.profileImage || "/default-avatar.jpg"} 
+              alt="User profile" 
+              className="w-9 h-9 rounded-full bg-gray-200"
+              data-testid="img-profile"
+            />
+            <div className="flex-1 min-w-0">
+              <h3 className="font-medium text-gray-900 text-sm truncate" data-testid="text-username">
+                {user && (
+                  <UserNameWithBadge 
+                    firstName={user.firstName}
+                    lastName={user.lastName}
+                    badgeImageUrl={user.badgeImageUrl}
+                  />
+                )}
+              </h3>
+            </div>
           </div>
-        </div>
+        </Link>
 
-        {/* Navigation Menu - Compact */}
+        {/* Navigation Menu */}
         <nav className="space-y-1">
           <Link 
             href="/friends" 

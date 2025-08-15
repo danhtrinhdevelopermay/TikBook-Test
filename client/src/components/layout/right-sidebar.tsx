@@ -13,21 +13,21 @@ export default function RightSidebar() {
   });
 
   return (
-    <aside className="hidden xl:block w-80 sticky top-20 h-fit">
+    <aside className="hidden xl:block w-80 sticky top-20 h-fit space-y-4">
       {/* Sponsored Content */}
-      <div className="bg-white rounded-lg shadow-sm p-4 mb-4">
-        <h3 className="text-lg font-semibold text-foreground mb-3">Được tài trợ</h3>
+      <div>
+        <h3 className="text-lg font-semibold text-gray-600 mb-3">Được tài trợ</h3>
         <div className="space-y-3">
-          <div className="flex items-start space-x-3 cursor-pointer hover:bg-secondary rounded-lg p-2 transition-colors" data-testid="card-sponsored">
+          <div className="flex items-start space-x-3 cursor-pointer hover:bg-gray-100 rounded-lg p-2 transition-colors" data-testid="card-sponsored">
             <img 
               src="/api/placeholder/80" 
               alt="Photography course advertisement" 
               className="w-16 h-16 rounded-lg object-cover bg-gray-200"
             />
             <div className="flex-1">
-              <h4 className="font-medium text-foreground text-sm">Thành thạo nhiếp ảnh</h4>
-              <p className="text-muted-foreground text-xs">Học kỹ thuật nhiếp ảnh chuyên nghiệp từ các chuyên gia</p>
-              <p className="text-muted-foreground text-xs mt-1">photographymaster.com</p>
+              <h4 className="font-medium text-gray-900 text-sm">Thành thạo nhiếp ảnh</h4>
+              <p className="text-gray-600 text-xs">Học kỹ thuật nhiếp ảnh chuyên nghiệp từ các chuyên gia</p>
+              <p className="text-gray-500 text-xs mt-1">photographymaster.com</p>
             </div>
           </div>
         </div>
@@ -35,10 +35,10 @@ export default function RightSidebar() {
 
       {/* Friend Requests */}
       {friendRequests.length > 0 && (
-        <div className="bg-white rounded-lg shadow-sm p-4 mb-4">
+        <div>
           <div className="flex items-center justify-between mb-3">
-            <h3 className="text-lg font-semibold text-foreground">Lời mời kết bạn</h3>
-            <a href="#" className="text-primary text-sm hover:underline" data-testid="link-see-all-requests">Xem tất cả</a>
+            <h3 className="text-lg font-semibold text-gray-600">Lời mời kết bạn</h3>
+            <a href="#" className="text-blue-600 text-sm hover:underline" data-testid="link-see-all-requests">Xem tất cả</a>
           </div>
           <div className="space-y-3">
             {friendRequests.map((request) => (
@@ -50,10 +50,10 @@ export default function RightSidebar() {
                     className="w-10 h-10 rounded-full bg-gray-200"
                   />
                   <div>
-                    <p className="font-medium text-foreground text-sm" data-testid={`text-requester-name-${request.id}`}>
+                    <p className="font-medium text-gray-900 text-sm" data-testid={`text-requester-name-${request.id}`}>
                       {request.firstName} {request.lastName}
                     </p>
-                    <p className="text-muted-foreground text-xs" data-testid={`text-mutual-friends-${request.id}`}>
+                    <p className="text-gray-600 text-xs" data-testid={`text-mutual-friends-${request.id}`}>
                       {request.mutualFriendsCount} bạn chung
                     </p>
                   </div>
@@ -61,7 +61,7 @@ export default function RightSidebar() {
                 <div className="flex space-x-2">
                   <Button 
                     size="sm" 
-                    className="bg-primary hover:bg-primary text-white px-3 py-1 rounded-lg text-sm transition-colors"
+                    className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded-lg text-sm transition-colors"
                     data-testid={`button-accept-${request.id}`}
                   >
                     Xác nhận
@@ -69,7 +69,7 @@ export default function RightSidebar() {
                   <Button 
                     variant="outline" 
                     size="sm" 
-                    className="bg-secondary hover:bg-border text-foreground px-3 py-1 rounded-lg text-sm transition-colors"
+                    className="bg-gray-100 hover:bg-gray-200 text-gray-900 px-3 py-1 rounded-lg text-sm transition-colors"
                     data-testid={`button-delete-${request.id}`}
                   >
                     Xóa
@@ -82,21 +82,21 @@ export default function RightSidebar() {
       )}
 
       {/* Online Friends */}
-      <div className="bg-white rounded-lg shadow-sm p-4">
+      <div>
         <div className="flex items-center justify-between mb-3">
-          <h3 className="text-lg font-semibold text-foreground">Danh bạ</h3>
+          <h3 className="text-lg font-semibold text-gray-600">Danh bạ</h3>
           <div className="flex space-x-2">
             <button 
-              className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-secondary transition-colors"
+              className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100 transition-colors"
               data-testid="button-search-contacts"
             >
-              <Search className="h-4 w-4 text-muted-foreground" />
+              <Search className="h-4 w-4 text-gray-600" />
             </button>
             <button 
-              className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-secondary transition-colors"
+              className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100 transition-colors"
               data-testid="button-contacts-options"
             >
-              <MoreHorizontal className="h-4 w-4 text-muted-foreground" />
+              <MoreHorizontal className="h-4 w-4 text-gray-600" />
             </button>
           </div>
         </div>
@@ -104,7 +104,7 @@ export default function RightSidebar() {
           {onlineFriends.map((friend) => (
             <div 
               key={friend.id}
-              className="flex items-center space-x-3 p-2 rounded-lg hover:bg-secondary cursor-pointer transition-colors"
+              className="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-100 cursor-pointer transition-colors"
               data-testid={`card-online-friend-${friend.id}`}
             >
               <div className="relative">
@@ -117,7 +117,7 @@ export default function RightSidebar() {
                   <span className="absolute -bottom-1 -right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></span>
                 )}
               </div>
-              <span className="text-foreground text-sm" data-testid={`text-friend-name-${friend.id}`}>
+              <span className="text-gray-900 text-sm" data-testid={`text-friend-name-${friend.id}`}>
                 {friend.firstName} {friend.lastName}
               </span>
             </div>
@@ -125,7 +125,7 @@ export default function RightSidebar() {
           
           {/* No online friends message */}
           {onlineFriends.length === 0 && (
-            <div className="text-center p-4 text-muted-foreground text-sm">
+            <div className="text-center p-4 text-gray-500 text-sm">
               Hiện tại không có bạn bè nào trực tuyến
             </div>
           )}

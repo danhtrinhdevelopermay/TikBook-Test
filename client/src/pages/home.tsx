@@ -12,20 +12,20 @@ export default function Home() {
   const { isDesktop, isMobile } = useScreenSize();
   
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-gray-100">
       {/* Header - show on desktop */}
       <div className={isDesktop ? "block" : "hidden"}>
         <Header />
       </div>
       
       {/* Mobile Header - show on mobile */}
-      <div className={isMobile ? "block bg-gradient-to-r from-gray-900 via-gray-800 to-black shadow-2xl sticky top-0 z-50 border-b border-gray-700/50" : "hidden"}>
+      <div className={isMobile ? "block bg-white shadow-md sticky top-0 z-50 border-b border-gray-200" : "hidden"}>
         <div className="flex items-center justify-between h-14 px-4">
           <div className="flex items-center space-x-3">
-            <div className="w-8 h-8 bg-gradient-to-br from-purple-600 to-blue-600 rounded-full flex items-center justify-center">
-              <span className="text-white text-sm font-bold">💖</span>
+            <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
+              <span className="text-white text-lg font-bold">f</span>
             </div>
-            <h1 className="text-lg font-bold text-white font-serif">Kết Nối Đẹp</h1>
+            <h1 className="text-lg font-bold text-blue-600">Facebook</h1>
           </div>
         </div>
       </div>

@@ -37,7 +37,7 @@ export default function MobileNav() {
                 data-testid={item.testId}
               >
                 <Icon className={`h-6 w-6 ${
-                  isActive ? "text-blue-500" : "text-gray-500"
+                  isActive ? "text-blue-600" : "text-gray-500"
                 }`} />
               </div>
             </Link>
