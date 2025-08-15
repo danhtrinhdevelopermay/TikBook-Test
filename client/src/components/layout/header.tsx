@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Bell, MessageCircle, Search, Home, Users, Tv, Store, Gamepad2, ChevronDown, LogOut, Settings, User, Menu, Bookmark, Calendar, Crown, Clock } from "lucide-react";
+import { Bell, MessageCircle, Search, Home, Users, Tv, Store, Gamepad2, ChevronDown, LogOut, Settings, User, Menu, Bookmark, Calendar, Crown, Clock, Plus } from "lucide-react";
 import { Link, useLocation } from "wouter";
 import { useAuth } from "@/hooks/useAuth";
 import { useOnlineStatus } from "@/hooks/useOnlineStatus";
@@ -31,26 +31,14 @@ export default function Header() {
   });
 
   return (
-    <header className="bg-gradient-to-r from-gray-900 via-gray-800 to-black shadow-2xl sticky top-0 z-50 border-b border-gray-700/50 backdrop-blur-lg">
+    <header className="bg-white shadow-sm sticky top-0 z-50 border-b border-gray-200">
       <div className="max-w-7xl mx-auto px-3 sm:px-6">
-        <div className="flex items-center justify-between h-16 lg:h-18">
+        <div className="flex items-center justify-between h-14">
           {/* Left Section: Logo & Search */}
           <div className="flex items-center space-x-2 sm:space-x-4">
             <div className="flex items-center space-x-2 sm:space-x-3">
-              <div className="w-9 h-9 sm:w-11 sm:h-11 bg-gradient-to-br from-purple-600 to-blue-600 rounded-full flex items-center justify-center shadow-xl border-2 border-gray-500/30 relative">
-                <span className="text-white text-base sm:text-lg font-bold font-serif">💖</span>
-                <div className="absolute inset-0 rounded-full bg-gradient-to-br from-purple-400 to-blue-400 opacity-20 animate-pulse"></div>
-              </div>
-              <div className="hidden sm:block">
-                <h1 className="text-xl sm:text-2xl font-bold text-white font-serif tracking-wide drop-shadow-lg">
-                  Kết Nối Đẹp
-                </h1>
-                <p className="text-xs text-white/80 -mt-0.5 tracking-wide">Mạng xã hội văn hóa</p>
-              </div>
-              <div className="block sm:hidden">
-                <h1 className="text-lg font-bold text-white font-serif tracking-wide drop-shadow-lg">
-                  Kết Nối Đẹp
-                </h1>
+              <div className="flex items-center">
+                <span className="text-2xl sm:text-3xl font-bold text-blue-600 tracking-tight">facebook</span>
               </div>
             </div>
             
@@ -58,59 +46,51 @@ export default function Header() {
             <Link href="/search">
               <div className="relative hidden md:block cursor-pointer ml-4">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Search className="h-4 w-4 text-gray-400" />
+                  <Search className="h-4 w-4 text-gray-500" />
                 </div>
-                <div className="w-64 lg:w-80 pl-10 pr-4 py-2.5 bg-gray-800/90 backdrop-blur-sm rounded-full border border-gray-600 shadow-lg hover:shadow-xl hover:bg-gray-700/90 transition-all duration-300 flex items-center text-gray-300 text-sm">
-                  Tìm kiếm bạn bè, người đẹp...
+                <div className="w-64 lg:w-80 pl-10 pr-4 py-2 bg-gray-100 rounded-full hover:bg-gray-200 transition-colors flex items-center text-gray-500 text-sm">
+                  Tìm kiếm trên Facebook
                 </div>
               </div>
             </Link>
           </div>
 
-          {/* Center Navigation - Compact Facebook style */}
+          {/* Center Navigation - Facebook style */}
           <nav className="hidden lg:flex space-x-0">
             <Link href="/home">
-              <div className={`flex items-center justify-center px-8 py-3 border-b-3 transition-all duration-200 ${
+              <div className={`flex items-center justify-center px-8 py-3 border-b-4 transition-all duration-200 ${
                 location === "/" || location === "/home" 
-                  ? "border-blue-500 bg-gray-700/30" 
-                  : "border-transparent hover:bg-gray-700/20 hover:border-gray-500"
+                  ? "border-blue-500 text-blue-500" 
+                  : "border-transparent hover:bg-gray-100 text-gray-500"
               }`} data-testid="link-home">
-                <Home className={`h-6 w-6 ${
-                  location === "/" || location === "/home" ? "text-blue-500" : "text-gray-400"
-                }`} />
+                <Home className="h-6 w-6" />
               </div>
             </Link>
             <Link href="/friends">
-              <div className={`flex items-center justify-center px-8 py-3 border-b-3 transition-all duration-200 ${
+              <div className={`flex items-center justify-center px-8 py-3 border-b-4 transition-all duration-200 ${
                 location === "/friends" 
-                  ? "border-blue-500 bg-gray-700/30" 
-                  : "border-transparent hover:bg-gray-700/20 hover:border-gray-500"
+                  ? "border-blue-500 text-blue-500" 
+                  : "border-transparent hover:bg-gray-100 text-gray-500"
               }`} data-testid="link-friends">
-                <Users className={`h-6 w-6 ${
-                  location === "/friends" ? "text-blue-500" : "text-gray-400"
-                }`} />
+                <Users className="h-6 w-6" />
               </div>
             </Link>
             <Link href="/beauty-contest">
-              <div className={`flex items-center justify-center px-8 py-3 border-b-3 transition-all duration-200 ${
+              <div className={`flex items-center justify-center px-8 py-3 border-b-4 transition-all duration-200 ${
                 location === "/beauty-contest" 
-                  ? "border-blue-500 bg-gray-700/30" 
-                  : "border-transparent hover:bg-gray-700/20 hover:border-gray-500"
+                  ? "border-blue-500 text-blue-500" 
+                  : "border-transparent hover:bg-gray-100 text-gray-500"
               }`} data-testid="link-watch">
-                <Tv className={`h-6 w-6 ${
-                  location === "/beauty-contest" ? "text-blue-500" : "text-gray-400"
-                }`} />
+                <Tv className="h-6 w-6" />
               </div>
             </Link>
             <Link href="/groups">
-              <div className={`flex items-center justify-center px-8 py-3 border-b-3 transition-all duration-200 ${
+              <div className={`flex items-center justify-center px-8 py-3 border-b-4 transition-all duration-200 ${
                 location === "/groups" 
-                  ? "border-blue-500 bg-gray-700/30" 
-                  : "border-transparent hover:bg-gray-700/20 hover:border-gray-500"
+                  ? "border-blue-500 text-blue-500" 
+                  : "border-transparent hover:bg-gray-100 text-gray-500"
               }`} data-testid="link-marketplace">
-                <Store className={`h-6 w-6 ${
-                  location === "/groups" ? "text-blue-500" : "text-gray-400"
-                }`} />
+                <Store className="h-6 w-6" />
               </div>
             </Link>
           </nav>
