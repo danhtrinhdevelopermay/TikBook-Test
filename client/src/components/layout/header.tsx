@@ -1,10 +1,10 @@
-import { Bell, MessageCircle, Search, Home, Users, Tv, Store, Gamepad2, ChevronDown, LogOut, Settings, User } from "lucide-react";
+import { useState } from "react";
+import { Bell, MessageCircle, Search, Home, Users, Tv, Store, Gamepad2, ChevronDown, LogOut, Settings, User, Menu, Bookmark, Calendar, Crown } from "lucide-react";
 import { Link, useLocation } from "wouter";
 import { useAuth } from "@/hooks/useAuth";
 import { useOnlineStatus } from "@/hooks/useOnlineStatus";
 import { useToast } from "@/hooks/use-toast";
 import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { UserNameWithBadge } from "@/components/ui/user-name-with-badge";
 import {
@@ -19,6 +19,7 @@ export default function Header() {
   const { user, signOut } = useAuth();
   const { toast } = useToast();
   const [location] = useLocation();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   
   // Maintain online status
   useOnlineStatus();
@@ -114,7 +115,7 @@ export default function Header() {
             </Link>
           </nav>
 
-          {/* Mobile Navigation - Compact Facebook style */}
+          {/* Mobile Navigation - Simplified like Facebook */}
           <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 lg:hidden z-50 shadow-lg">
             <div className="grid grid-cols-5 py-1">
               <Link href="/home">
@@ -145,19 +146,93 @@ export default function Header() {
                   }`} />
                 </div>
               </Link>
-              <Link href="/notifications">
-                <div className="flex items-center justify-center p-3 relative" data-testid="mobile-link-notifications">
-                  <Bell className={`h-6 w-6 ${
-                    location === "/notifications" ? "text-blue-500" : "text-gray-500"
-                  }`} />
-                  {unreadCount.count > 0 && (
-                    <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-bold min-w-[20px]">
-                      {unreadCount.count > 9 ? '9+' : unreadCount.count}
-                    </span>
-                  )}
-                </div>
-              </Link>
+              
+              {/* Mobile Menu Dropdown */}
+              <div className="relative">
+                <button
+                  onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                  className="flex items-center justify-center p-3 w-full" 
+                  data-testid="mobile-menu-toggle"
+                >
+                  <Menu className="h-6 w-6 text-gray-500" />
+                </button>
+                
+                {/* Dropdown Menu */}
+                {isMobileMenuOpen && (
+                  <div className="absolute bottom-full right-0 mb-2 w-64 bg-white rounded-lg shadow-lg border border-gray-200 py-2">
+                    <Link href="/notifications">
+                      <div 
+                        className="flex items-center space-x-3 px-4 py-3 hover:bg-gray-100 transition-colors"
+                        onClick={() => setIsMobileMenuOpen(false)}
+                      >
+                        <Bell className="h-5 w-5 text-gray-600" />
+                        <span className="text-gray-900 font-medium">Thông báo</span>
+                        {unreadCount.count > 0 && (
+                          <span className="ml-auto bg-red-500 text-white text-xs px-2 py-1 rounded-full">
+                            {unreadCount.count > 9 ? '9+' : unreadCount.count}
+                          </span>
+                        )}
+                      </div>
+                    </Link>
+                    <Link href="/messages">
+                      <div 
+                        className="flex items-center space-x-3 px-4 py-3 hover:bg-gray-100 transition-colors"
+                        onClick={() => setIsMobileMenuOpen(false)}
+                      >
+                        <MessageCircle className="h-5 w-5 text-gray-600" />
+                        <span className="text-gray-900 font-medium">Tin nhắn</span>
+                      </div>
+                    </Link>
+                    <Link href="/saved">
+                      <div 
+                        className="flex items-center space-x-3 px-4 py-3 hover:bg-gray-100 transition-colors"
+                        onClick={() => setIsMobileMenuOpen(false)}
+                      >
+                        <Bookmark className="h-5 w-5 text-gray-600" />
+                        <span className="text-gray-900 font-medium">Đã lưu</span>
+                      </div>
+                    </Link>
+                    <Link href="/events">
+                      <div 
+                        className="flex items-center space-x-3 px-4 py-3 hover:bg-gray-100 transition-colors"
+                        onClick={() => setIsMobileMenuOpen(false)}
+                      >
+                        <Calendar className="h-5 w-5 text-gray-600" />
+                        <span className="text-gray-900 font-medium">Sự kiện</span>
+                      </div>
+                    </Link>
+                    <Link href="/profile">
+                      <div 
+                        className="flex items-center space-x-3 px-4 py-3 hover:bg-gray-100 transition-colors"
+                        onClick={() => setIsMobileMenuOpen(false)}
+                      >
+                        <User className="h-5 w-5 text-gray-600" />
+                        <span className="text-gray-900 font-medium">Hồ sơ cá nhân</span>
+                      </div>
+                    </Link>
+                    <div className="border-t border-gray-200 my-2"></div>
+                    <button
+                      onClick={() => {
+                        signOut.mutate();
+                        setIsMobileMenuOpen(false);
+                      }}
+                      className="flex items-center space-x-3 px-4 py-3 hover:bg-gray-100 transition-colors w-full text-left"
+                    >
+                      <LogOut className="h-5 w-5 text-red-600" />
+                      <span className="text-red-600 font-medium">Đăng xuất</span>
+                    </button>
+                  </div>
+                )}
+              </div>
             </div>
+            
+            {/* Overlay to close menu when clicking outside */}
+            {isMobileMenuOpen && (
+              <div 
+                className="fixed inset-0 bg-black bg-opacity-25 z-[-1]"
+                onClick={() => setIsMobileMenuOpen(false)}
+              ></div>
+            )}
           </div>
 
           {/* Right Section: Actions & Profile */}
