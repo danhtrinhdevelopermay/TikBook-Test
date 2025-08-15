@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Bell, MessageCircle, Search, Home, Users, Tv, Store, Gamepad2, ChevronDown, LogOut, Settings, User, Menu, Bookmark, Calendar, Crown } from "lucide-react";
+import { Bell, MessageCircle, Search, Home, Users, Tv, Store, Gamepad2, ChevronDown, LogOut, Settings, User, Menu, Bookmark, Calendar, Crown, Clock } from "lucide-react";
 import { Link, useLocation } from "wouter";
 import { useAuth } from "@/hooks/useAuth";
 import { useOnlineStatus } from "@/hooks/useOnlineStatus";
@@ -160,29 +160,6 @@ export default function Header() {
                 {/* Dropdown Menu */}
                 {isMobileMenuOpen && (
                   <div className="absolute bottom-full right-0 mb-2 w-64 bg-white rounded-lg shadow-lg border border-gray-200 py-2">
-                    <Link href="/notifications">
-                      <div 
-                        className="flex items-center space-x-3 px-4 py-3 hover:bg-gray-100 transition-colors"
-                        onClick={() => setIsMobileMenuOpen(false)}
-                      >
-                        <Bell className="h-5 w-5 text-gray-600" />
-                        <span className="text-gray-900 font-medium">Thông báo</span>
-                        {unreadCount.count > 0 && (
-                          <span className="ml-auto bg-red-500 text-white text-xs px-2 py-1 rounded-full">
-                            {unreadCount.count > 9 ? '9+' : unreadCount.count}
-                          </span>
-                        )}
-                      </div>
-                    </Link>
-                    <Link href="/messages">
-                      <div 
-                        className="flex items-center space-x-3 px-4 py-3 hover:bg-gray-100 transition-colors"
-                        onClick={() => setIsMobileMenuOpen(false)}
-                      >
-                        <MessageCircle className="h-5 w-5 text-gray-600" />
-                        <span className="text-gray-900 font-medium">Tin nhắn</span>
-                      </div>
-                    </Link>
                     <Link href="/saved">
                       <div 
                         className="flex items-center space-x-3 px-4 py-3 hover:bg-gray-100 transition-colors"
@@ -199,6 +176,24 @@ export default function Header() {
                       >
                         <Calendar className="h-5 w-5 text-gray-600" />
                         <span className="text-gray-900 font-medium">Sự kiện</span>
+                      </div>
+                    </Link>
+                    <Link href="/videos">
+                      <div 
+                        className="flex items-center space-x-3 px-4 py-3 hover:bg-gray-100 transition-colors"
+                        onClick={() => setIsMobileMenuOpen(false)}
+                      >
+                        <Tv className="h-5 w-5 text-gray-600" />
+                        <span className="text-gray-900 font-medium">Video YouTube</span>
+                      </div>
+                    </Link>
+                    <Link href="/memories">
+                      <div 
+                        className="flex items-center space-x-3 px-4 py-3 hover:bg-gray-100 transition-colors"
+                        onClick={() => setIsMobileMenuOpen(false)}
+                      >
+                        <Clock className="h-5 w-5 text-gray-600" />
+                        <span className="text-gray-900 font-medium">Kỷ niệm</span>
                       </div>
                     </Link>
                     <Link href="/profile">
